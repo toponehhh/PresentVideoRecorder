@@ -6,9 +6,19 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d"
-    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+    FontFamily="Microsoft YaHei"
+    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}" RequestedTheme="Light">
 
-    <Grid>
-
-    </Grid>
+    <NavigationView x:Name="nvSample" PaneTitle="Function List" Loaded="NvSample_Loaded" ItemInvoked="NvSample_ItemInvoked">
+        <NavigationView.MenuItems>
+            <NavigationViewItem Content="Video Record" Tag="RecordPage" Icon="Video" />
+            <NavigationViewItem Icon="Save" Content="Video Editor" Tag="EditPage" />
+            <NavigationViewItem Icon="Refresh" Content="Code Tanslation" Tag="TransCodePage" />
+            <NavigationViewItem Icon="Upload" Content="Publis Content" Tag="PublishPage" />
+        </NavigationView.MenuItems>
+        <NavigationView.Header>
+            <TextBlock Text="Present Video Recorder" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,20,0,0" FontSize="48" FontFamily="Microsoft YaHei"></TextBlock>
+        </NavigationView.Header>
+            <Frame x:Name="contentFrame"/>
+        </NavigationView>
 </Page>
