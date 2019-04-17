@@ -1,5 +1,5 @@
 ﻿<Page
-    x:Class="MyUWP.MainPage"
+    x:Class="PresentVideoRecorder.MainPage"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:local="using:MyUWP"
@@ -17,7 +17,7 @@
             <NavigationViewItem Icon="Upload" Content="Publis Content" Tag="PublishPage" />
         </NavigationView.MenuItems>
         <NavigationView.Header>
-            <TextBlock Text="Present Video Recorder" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,20,0,0" FontSize="48" FontFamily="Microsoft YaHei"></TextBlock>
+            <TextBlock Text="Present Video Recorder" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,20,0,0" FontSize="48"></TextBlock>
         </NavigationView.Header>
             <Frame x:Name="contentFrame"/>
         </NavigationView>
