@@ -27,7 +27,7 @@
                 <ColumnDefinition Width="*"></ColumnDefinition>
                 <ColumnDefinition Width="50"></ColumnDefinition>
             </Grid.ColumnDefinitions>
-            <TextBlock Text="录像存放路径：" VerticalAlignment="Center" Grid.Column="0"></TextBlock>
+            <TextBlock Text="Video Save Path：" VerticalAlignment="Center" Grid.Column="0"></TextBlock>
             <TextBox Height="35" VerticalAlignment="Center" HorizontalAlignment="Stretch" Grid.Column="1" Margin="0,0,20,0"></TextBox>
             <Button Height="35" HorizontalAlignment="Stretch" Grid.Column="2" Content="..."></Button>
         </Grid>
@@ -36,14 +36,14 @@
                 <ColumnDefinition Width="120"></ColumnDefinition>
                 <ColumnDefinition Width="*"></ColumnDefinition>
             </Grid.ColumnDefinitions>
-            <TextBlock Text="选择声音来源：" VerticalAlignment="Center" Grid.Column="0"></TextBlock>
+            <TextBlock Text="Record the voice from：" VerticalAlignment="Center" Grid.Column="0"></TextBlock>
             <ComboBox Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Stretch">
-                <ComboBoxItem Content="麦克风"/>
-                <ComboBoxItem Content="桌面视频"/>
+                <ComboBoxItem Content="Mic"/>
+                <ComboBoxItem Content="Inline"/>
             </ComboBox>
         </Grid>
-        <CheckBox Content="录制摄像头视频" Grid.Row="2" Grid.Column="0" HorizontalAlignment="Center" VerticalAlignment="Center" IsChecked="True"></CheckBox>
-        <CheckBox Content="录制桌面视频" Grid.Row="2" Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Center" IsChecked="True"></CheckBox>
+        <CheckBox Content="Camera Video" Grid.Row="2" Grid.Column="0" HorizontalAlignment="Center" VerticalAlignment="Center" IsChecked="True"></CheckBox>
+        <CheckBox Content="Desktop Video" Grid.Row="2" Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Center" IsChecked="True"></CheckBox>
         <Image Source="/Assets/wb070323054.jpg" Grid.Row="3" Grid.Column="0" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Stretch="Fill" Margin="20,0"></Image>
         <Image Source="/Assets/thET3NKEB5.jpg" Grid.Row="3" Grid.Column="1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Stretch="Fill" Margin="20,0"></Image>
         <Grid Grid.Row="4" Grid.Column="0">
@@ -51,10 +51,10 @@
                 <ColumnDefinition Width="120"></ColumnDefinition>
                 <ColumnDefinition Width="*"></ColumnDefinition>
             </Grid.ColumnDefinitions>
-            <TextBlock Text="选择摄像头：" VerticalAlignment="Center" Grid.Column="0" Margin="20,0,0,0"></TextBlock>
+            <TextBlock Text="Choose Camera：" VerticalAlignment="Center" Grid.Column="0" Margin="20,0,0,0"></TextBlock>
             <ComboBox Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Stretch" Margin="0,0,20,0">
-                <ComboBoxItem Content="前置摄像头"/>
-                <ComboBoxItem Content="后置摄像头"/>
+                <ComboBoxItem Content="Front"/>
+                <ComboBoxItem Content="Rear"/>
             </ComboBox>
         </Grid>
         <Grid Grid.Row="4" Grid.Column="1">
@@ -62,10 +62,10 @@
                 <ColumnDefinition Width="120"></ColumnDefinition>
                 <ColumnDefinition Width="*"></ColumnDefinition>
             </Grid.ColumnDefinitions>
-            <TextBlock Text="选择桌面：" VerticalAlignment="Center" Grid.Column="0" Margin="20,0,0,0"></TextBlock>
+            <TextBlock Text="Choose Desktop：" VerticalAlignment="Center" Grid.Column="0" Margin="20,0,0,0"></TextBlock>
             <ComboBox Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Stretch" Margin="0,0,20,0">
-                <ComboBoxItem Content="桌面1"/>
-                <ComboBoxItem Content="桌面2"/>
+                <ComboBoxItem Content="Desktop1"/>
+                <ComboBoxItem Content="Desktop2"/>
             </ComboBox>
         </Grid>
         <Grid Grid.Row="5" Grid.Column="0" Grid.ColumnSpan="2">
@@ -83,7 +83,7 @@
                             <ColumnDefinition Width="*"></ColumnDefinition>
                         </Grid.ColumnDefinitions>
                         <SymbolIcon Symbol ="Video" Grid.Column="0" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"></SymbolIcon>
-                        <TextBlock Text="开始录像" Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Center"></TextBlock>
+                        <TextBlock Text="Start" Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Center"></TextBlock>
                     </Grid>
                 </Button.Content>
             </Button>
@@ -95,7 +95,7 @@
                             <ColumnDefinition Width="*"></ColumnDefinition>
                         </Grid.ColumnDefinitions>
                         <SymbolIcon Symbol="Pause"  Grid.Column="0" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"></SymbolIcon>
-                        <TextBlock Text="暂停录像" Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Center"></TextBlock>
+                        <TextBlock Text="Pause" Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Center"></TextBlock>
                     </Grid>
                 </Button.Content>
             </Button>
@@ -107,7 +107,7 @@
                             <ColumnDefinition Width="*"></ColumnDefinition>
                         </Grid.ColumnDefinitions>
                         <SymbolIcon Symbol="Stop"  Grid.Column="0" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"></SymbolIcon>
-                        <TextBlock Text="结束录像" Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Center"></TextBlock>
+                        <TextBlock Text="Stop" Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Center"></TextBlock>
                     </Grid>
                 </Button.Content>
             </Button>
@@ -119,7 +119,7 @@
                             <ColumnDefinition Width="*"></ColumnDefinition>
                         </Grid.ColumnDefinitions>
                         <SymbolIcon Symbol="Mute"  Grid.Column="0" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"></SymbolIcon>
-                        <TextBlock Text="暂时静音" Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Center"></TextBlock>
+                        <TextBlock Text="Mute" Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Center"></TextBlock>
                     </Grid>
                 </Button.Content>
             </Button>
