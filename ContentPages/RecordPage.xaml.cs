@@ -1,10 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
+using System.Threading.Tasks;
+using Windows.Devices.Enumeration;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
+using Windows.Graphics.Display;
+using Windows.Media.Capture;
+using Windows.Media.MediaProperties;
+using Windows.Storage;
+using Windows.System.Display;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
@@ -22,30 +30,93 @@ namespace PresentVideoRecorder.ContentPages
     /// </summary>
     public sealed partial class RecordPage : Page
     {
+        LowLagMediaRecording _mediaRecording;
+        MediaCapture mediaCapture;
+        bool isPreviewing;
+        DisplayRequest displayRequest = new DisplayRequest();
+
         public RecordPage()
         {
             this.InitializeComponent();
         }
 
-        private void Page_Loaded(object sender, RoutedEventArgs e)
+        private async Task StartPreviewAsync()
         {
-            //this.CameraPreviewControl.StartAsync();
+            try
+            {
+
+                mediaCapture = new MediaCapture();
+                await mediaCapture.InitializeAsync();
+
+                displayRequest.RequestActive();
+                DisplayInformation.AutoRotationPreferences = DisplayOrientations.Landscape;
+            }
+            catch (UnauthorizedAccessException)
+            {
+                // This will be thrown if the user denied access to the camera in privacy settings
+                Debug.WriteLine("The app was denied access to the camera");
+                return;
+            }
+
+            try
+            {
+                PreviewControl.Source = mediaCapture;
+                await mediaCapture.StartPreviewAsync();
+                isPreviewing = true;
+            }
+            catch (System.IO.FileLoadException)
+            {
+                //mediaCapture.CaptureDeviceExclusiveControlStatusChanged += _mediaCapture_CaptureDeviceExclusiveControlStatusChanged;
+            }
+
         }
 
-        protected override void OnNavigatedTo(NavigationEventArgs e)
+        protected override async void OnNavigatedTo(NavigationEventArgs e)
         {
-            this.CameraPreviewControl.StartAsync();
+            await StartPreviewAsync();
+            await GetVideoProfileSupportedDevicesAsync();
         }
 
-        private void CameraHelper_FrameArrived(object sender, Microsoft.Toolkit.Uwp.Helpers.FrameEventArgs e)
+        public async Task GetVideoProfileSupportedDevicesAsync()
         {
-            throw new NotImplementedException();
+            string deviceId = string.Empty;
+
+            // Finds all video capture devices
+            DeviceInformationCollection devices = await DeviceInformation.FindAllAsync(DeviceClass.VideoCapture);
+
+            cbCameras.Items.Clear();
+            foreach (var device in devices)
+            {
+                ComboBoxItem item = new ComboBoxItem();
+                item.Content = device.Name;
+                item.IsSelected = true;
+                cbCameras.Items.Add(item);
+            }
         }
 
-        private void CameraPreviewControl_PreviewFailed(object sender, Microsoft.Toolkit.Uwp.UI.Controls.PreviewFailedEventArgs e)
+        private async void Start_Click(object sender, RoutedEventArgs e)
         {
-            
+            var myVideos = await Windows.Storage.StorageLibrary.GetLibraryAsync(Windows.Storage.KnownLibraryId.Videos);
+            StorageFile file = await myVideos.SaveFolder.CreateFileAsync("camera.mp4", CreationCollisionOption.GenerateUniqueName);
+            _mediaRecording = await mediaCapture.PrepareLowLagRecordToStorageFileAsync(MediaEncodingProfile.CreateMp4(VideoEncodingQuality.Auto), file);
+            await _mediaRecording.StartAsync();
         }
 
+        private async void BtnStop_Click(object sender, RoutedEventArgs e)
+        {
+            await _mediaRecording.FinishAsync();
+        }
+
+        private async void ChbCamera_Click(object sender, RoutedEventArgs e)
+        {
+            if(chbCamera.IsChecked.HasValue && chbCamera.IsChecked.Value)
+            {
+                await mediaCapture.StartPreviewAsync();
+            }
+            else
+            {
+                await mediaCapture.StopPreviewAsync();
+            }
+        }
     }
 }
