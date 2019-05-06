@@ -26,5 +26,26 @@ namespace PresentVideoRecorder.ContentPages
         {
             this.InitializeComponent();
         }
+
+        private void Page_Loaded(object sender, RoutedEventArgs e)
+        {
+            //this.CameraPreviewControl.StartAsync();
+        }
+
+        protected override void OnNavigatedTo(NavigationEventArgs e)
+        {
+            this.CameraPreviewControl.StartAsync();
+        }
+
+        private void CameraHelper_FrameArrived(object sender, Microsoft.Toolkit.Uwp.Helpers.FrameEventArgs e)
+        {
+            throw new NotImplementedException();
+        }
+
+        private void CameraPreviewControl_PreviewFailed(object sender, Microsoft.Toolkit.Uwp.UI.Controls.PreviewFailedEventArgs e)
+        {
+            
+        }
+
     }
 }

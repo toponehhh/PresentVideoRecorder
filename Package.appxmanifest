@@ -49,5 +49,6 @@
     <uap:Capability Name="videosLibrary"/>
     <uap6:Capability Name="graphicsCapture"/>
     <DeviceCapability Name="microphone"/>
+    <DeviceCapability Name="webcam"/>
   </Capabilities>
 </Package>
