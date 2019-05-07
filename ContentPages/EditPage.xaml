@@ -27,22 +27,33 @@
                 <ColumnDefinition Width="*"></ColumnDefinition>
                 <ColumnDefinition Width="50"></ColumnDefinition>
             </Grid.ColumnDefinitions>
-            <TextBlock Text="打开录像路径：" VerticalAlignment="Center" Grid.Column="0"></TextBlock>
+            <TextBlock Text="Video Library：" VerticalAlignment="Center" Grid.Column="0"></TextBlock>
             <TextBox Height="35" VerticalAlignment="Center" HorizontalAlignment="Stretch" Grid.Column="1" Margin="0,0,20,0"></TextBox>
-            <Button Height="35" HorizontalAlignment="Stretch" Grid.Column="2" Content="..."></Button>
+            <Button x:Name="buttonPickButton" Height="35" HorizontalAlignment="Stretch" Grid.Column="2" Content="..."
+                    Click="ButtonPickButton_Click"></Button>
         </Grid>
         
-        <TextBlock Text="摄像头视频" Grid.Row="1" Grid.Column="0" HorizontalAlignment="Center" VerticalAlignment="Center" ></TextBlock>
-        <TextBlock Text="桌面视频" Grid.Row="1" Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Center"></TextBlock>
-        <Image Source="/Assets/wb070323054.jpg" Grid.Row="2" Grid.Column="0" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Stretch="Fill" Margin="20,0"></Image>
-        <Image Source="/Assets/thET3NKEB5.jpg" Grid.Row="2" Grid.Column="1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Stretch="Fill" Margin="20,0"></Image>
+        <TextBlock Text="Camera Video" Grid.Row="1" Grid.Column="0" HorizontalAlignment="Center" VerticalAlignment="Center" ></TextBlock>
+        <TextBlock Text="Desktop Video" Grid.Row="1" Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Center"></TextBlock>
+        <MediaElement x:Name="cameraVideoPlayer" Grid.Row="2" Grid.Column="0" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Stretch="Fill" Margin="20,0"
+                      AreTransportControlsEnabled="True"/>
+        <MediaElement x:Name="desktopVideoPlayer" Grid.Row="2" Grid.Column="1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Stretch="Fill" Margin="20,0"
+                      AreTransportControlsEnabled="True"
+                      />
+        <!--<Image Source="/Assets/wb070323054.jpg" Grid.Row="2" Grid.Column="0" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Stretch="Fill" Margin="20,0"></Image>-->
+        <!--<Image Source="/Assets/thET3NKEB5.jpg" Grid.Row="2" Grid.Column="1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Stretch="Fill" Margin="20,0"></Image>-->
         <Grid Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="2">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="120"></ColumnDefinition>
                 <ColumnDefinition Width="*"></ColumnDefinition>
             </Grid.ColumnDefinitions>
             <TextBlock Text="选择内容范围：" VerticalAlignment="Center" Grid.Column="0"></TextBlock>
-            <controls:RangeSelector  Minimum="10" Maximum="100"  StepFrequency="2" Grid.Column="1" HorizontalAlignment="Stretch" VerticalAlignment="Center" Margin="0,0,20,0"/>
+            <controls:RangeSelector x:Name="durationSelector"  Minimum="0" Maximum="100"  
+                                    StepFrequency="1" 
+                                    Grid.Column="1" 
+                                    HorizontalAlignment="Stretch" VerticalAlignment="Center" 
+                                    Margin="0,0,20,0" ValueChanged="DurationSelector_ValueChanged"
+                                    />
         </Grid>
         
         <Grid Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="2">
@@ -54,7 +65,8 @@
                 <ColumnDefinition Width="*"></ColumnDefinition>
                 <ColumnDefinition Width="*"></ColumnDefinition>
             </Grid.ColumnDefinitions>
-            <Button Grid.Column="0" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="24">
+            <Button x:Name="buttonPlay" Grid.Column="0" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="24"
+                    Click="ButtonPlay_Click">
                 <Button.Content>
                     <Grid HorizontalAlignment="Stretch">
                         <Grid.ColumnDefinitions>
@@ -62,11 +74,11 @@
                             <ColumnDefinition Width="*"></ColumnDefinition>
                         </Grid.ColumnDefinitions>
                         <SymbolIcon Symbol ="Play" Grid.Column="0" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"></SymbolIcon>
-                        <TextBlock Text="播放录像" Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Center"></TextBlock>
+                        <TextBlock Text="Play" Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Center"></TextBlock>
                     </Grid>
                 </Button.Content>
             </Button>
-            <Button Grid.Column="1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="24">
+            <Button x:Name="buttonBackward" Grid.Column="1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="24">
                 <Button.Content>
                     <Grid HorizontalAlignment="Stretch">
                         <Grid.ColumnDefinitions>
@@ -74,11 +86,11 @@
                             <ColumnDefinition Width="*"></ColumnDefinition>
                         </Grid.ColumnDefinitions>
                         <SymbolIcon Symbol="Previous"  Grid.Column="0" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"></SymbolIcon>
-                        <TextBlock Text="回退一帧" Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Center"></TextBlock>
+                        <TextBlock Text="Back" Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Center"></TextBlock>
                     </Grid>
                 </Button.Content>
             </Button>
-            <Button Grid.Column="2" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="24">
+            <Button x:Name="buttonForward" Grid.Column="2" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="24">
                 <Button.Content>
                     <Grid HorizontalAlignment="Stretch">
                         <Grid.ColumnDefinitions>
@@ -86,11 +98,11 @@
                             <ColumnDefinition Width="*"></ColumnDefinition>
                         </Grid.ColumnDefinitions>
                         <SymbolIcon Symbol="Next"  Grid.Column="0" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"></SymbolIcon>
-                        <TextBlock Text="快进一帧" Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Center"></TextBlock>
+                        <TextBlock Text="Forward" Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Center"></TextBlock>
                     </Grid>
                 </Button.Content>
             </Button>
-            <Button Grid.Column="3" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="24">
+            <Button x:Name="buttonRemoveClip" Grid.Column="3" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="24">
                 <Button.Content>
                     <Grid HorizontalAlignment="Stretch">
                         <Grid.ColumnDefinitions>
@@ -98,11 +110,12 @@
                             <ColumnDefinition Width="*"></ColumnDefinition>
                         </Grid.ColumnDefinitions>
                         <SymbolIcon Symbol="Cut"  Grid.Column="0" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"></SymbolIcon>
-                        <TextBlock Text="剪去选择范围" Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Center"></TextBlock>
+                        <TextBlock Text="Trim" Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Center"></TextBlock>
                     </Grid>
                 </Button.Content>
             </Button>
-            <Button Grid.Column="4" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="24">
+            <Button x:Name="buttonReserveClip" Grid.Column="4" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="24"
+                    Click="ButtonReserveClip_Click">
                 <Button.Content>
                     <Grid HorizontalAlignment="Stretch">
                         <Grid.ColumnDefinitions>
@@ -110,11 +123,11 @@
                             <ColumnDefinition Width="*"></ColumnDefinition>
                         </Grid.ColumnDefinitions>
                         <SymbolIcon Symbol="Save"  Grid.Column="0" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"></SymbolIcon>
-                        <TextBlock Text="保留选择范围" Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Center"></TextBlock>
+                        <TextBlock Text="Save" Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Center"></TextBlock>
                     </Grid>
                 </Button.Content>
             </Button>
-            <Button Grid.Column="5" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="24">
+            <Button x:Name="buttonApply" Grid.Column="5" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="24">
                 <Button.Content>
                     <Grid HorizontalAlignment="Stretch">
                         <Grid.ColumnDefinitions>
@@ -122,7 +135,7 @@
                             <ColumnDefinition Width="*"></ColumnDefinition>
                         </Grid.ColumnDefinitions>
                         <SymbolIcon Symbol="Refresh"  Grid.Column="0" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"></SymbolIcon>
-                        <TextBlock Text="重置视频" Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Center"></TextBlock>
+                        <TextBlock Text="Apply" Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Center"></TextBlock>
                     </Grid>
                 </Button.Content>
             </Button>

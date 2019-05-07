@@ -21,7 +21,7 @@
                 <ColumnDefinition Width="*"></ColumnDefinition>
                 <ColumnDefinition Width="50"></ColumnDefinition>
             </Grid.ColumnDefinitions>
-            <TextBlock Text="打开录像路径：" VerticalAlignment="Center" Grid.Column="0"></TextBlock>
+            <TextBlock Text="Record Path：" VerticalAlignment="Center" Grid.Column="0"></TextBlock>
             <TextBox Height="35" VerticalAlignment="Center" HorizontalAlignment="Stretch" Grid.Column="1" Margin="0,0,10,0"></TextBox>
             <Button Height="35" HorizontalAlignment="Stretch" Grid.Column="2" Content="..."></Button>
         </Grid>
@@ -31,7 +31,7 @@
                 <ColumnDefinition Width="*"></ColumnDefinition>
                 <ColumnDefinition Width="50"></ColumnDefinition>
             </Grid.ColumnDefinitions>
-            <TextBlock Text="课程发布路径：" VerticalAlignment="Center" Grid.Column="0"></TextBlock>
+            <TextBlock Text="Publish Path：" VerticalAlignment="Center" Grid.Column="0"></TextBlock>
             <TextBox Height="35" VerticalAlignment="Center" HorizontalAlignment="Stretch" Grid.Column="1" Margin="0,0,10,0"></TextBox>
             <Button Height="35" HorizontalAlignment="Stretch" Grid.Column="2" Content="..."></Button>
         </Grid>
@@ -41,7 +41,7 @@
                 <ColumnDefinition Width="*"></ColumnDefinition>
                 <ColumnDefinition Width="50"></ColumnDefinition>
             </Grid.ColumnDefinitions>
-            <TextBlock Text="课程发布进度：" VerticalAlignment="Center" Grid.Column="0"></TextBlock>
+            <TextBlock Text="Progress：" VerticalAlignment="Center" Grid.Column="0"></TextBlock>
             <ProgressBar Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Stretch"  Value="60" Height="30" Margin="0,0,10,0" x:Name="pbProgress"/>
             <TextBlock Text="{Binding ElementName=pbProgress, Path=Value, Mode=OneWay}" Grid.Column="2" HorizontalAlignment="Center" VerticalAlignment="Center"></TextBlock>
         </Grid>
@@ -59,7 +59,7 @@
                             <ColumnDefinition Width="*"></ColumnDefinition>
                         </Grid.ColumnDefinitions>
                         <SymbolIcon Symbol ="Upload" Grid.Column="0" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"></SymbolIcon>
-                        <TextBlock Text="开始上传" Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Center"></TextBlock>
+                        <TextBlock Text="Upload" Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Center"></TextBlock>
                     </Grid>
                 </Button.Content>
             </Button>
@@ -71,7 +71,7 @@
                             <ColumnDefinition Width="*"></ColumnDefinition>
                         </Grid.ColumnDefinitions>
                         <SymbolIcon Symbol="Pause"  Grid.Column="0" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"></SymbolIcon>
-                        <TextBlock Text="暂停发布" Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Center"></TextBlock>
+                        <TextBlock Text="Pause" Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Center"></TextBlock>
                     </Grid>
                 </Button.Content>
             </Button>
@@ -83,7 +83,7 @@
                             <ColumnDefinition Width="*"></ColumnDefinition>
                         </Grid.ColumnDefinitions>
                         <SymbolIcon Symbol="Undo"  Grid.Column="0" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"></SymbolIcon>
-                        <TextBlock Text="放弃发布" Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Center"></TextBlock>
+                        <TextBlock Text="Cancel" Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Center"></TextBlock>
                     </Grid>
                 </Button.Content>
             </Button>

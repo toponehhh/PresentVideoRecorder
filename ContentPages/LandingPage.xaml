@@ -12,6 +12,91 @@
         <Grid.Background>
             <ImageBrush ImageSource="/Assets/LandingBk.jpg" Stretch="Fill"/>
         </Grid.Background>
+        <Grid.RowDefinitions>
+            <RowDefinition></RowDefinition>
+            <RowDefinition></RowDefinition>
+            <RowDefinition></RowDefinition>
+            <RowDefinition></RowDefinition>
+            <RowDefinition></RowDefinition>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"></ColumnDefinition>
+            <ColumnDefinition Width="*"></ColumnDefinition>
+            <ColumnDefinition Width="*"></ColumnDefinition>
+            <ColumnDefinition Width="*"></ColumnDefinition>
+            <ColumnDefinition Width="*"></ColumnDefinition>
+            <ColumnDefinition Width="*"></ColumnDefinition>
+            <ColumnDefinition Width="*"></ColumnDefinition>
+            <ColumnDefinition Width="*"></ColumnDefinition>
+        </Grid.ColumnDefinitions>
+        <TextBlock Text="Getting Start" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="3" FontSize="48" VerticalAlignment="Center" Margin="90,0,0,0"></TextBlock>
+        <TextBlock Text="This tool is easy to do presentation recording, decoding, editing and upload functions. " Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="8" FontSize="28" TextWrapping="Wrap" Margin="90,0,0,0"></TextBlock>
 
+        <!--<Button x:Name="btnRecord"  Grid.Row="2" Grid.Column="0" Grid.RowSpan="2" Grid.ColumnSpan="2" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Margin="50,20" Click="BtnRecord_Click">
+            <Button.Content>
+                <Grid >
+                    <Grid.RowDefinitions>
+                        <RowDefinition></RowDefinition>
+                        <RowDefinition></RowDefinition>
+                    </Grid.RowDefinitions>
+                    <Grid.Background>
+                        <SolidColorBrush Color="Black" Opacity="0"/>
+                    </Grid.Background>
+                    <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xE116;" FontSize="120"/>
+                    <TextBlock Grid.Row="1" Text="Start to Record" FontSize="18" Margin="0,20,0,0"></TextBlock>
+                </Grid>
+            </Button.Content>
+        </Button>-->
+        <Grid Grid.Row="2" Grid.Column="0" Grid.RowSpan="2" Grid.ColumnSpan="2">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="2*"></RowDefinition>
+                <RowDefinition></RowDefinition>
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition></ColumnDefinition>
+                <ColumnDefinition></ColumnDefinition>
+            </Grid.ColumnDefinitions>
+            <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xE116;" FontSize="200" Grid.Row="0" Grid.ColumnSpan="2"/>
+            <Button x:Name="btnRecord" FontSize="18" Grid.Row="1" Grid.ColumnSpan="2" Content="Start to Record" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Margin="85,20,85,20" Click="BtnRecord_Click"></Button>
+        </Grid>
+
+        <Grid Grid.Row="2" Grid.Column="2" Grid.RowSpan="2" Grid.ColumnSpan="2">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="2*"></RowDefinition>
+                <RowDefinition></RowDefinition>
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"></ColumnDefinition>
+                <ColumnDefinition Width="*"></ColumnDefinition>
+            </Grid.ColumnDefinitions>
+            <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xE16B;" FontSize="180" Grid.Row="0" Grid.ColumnSpan="2"/>
+            <Button x:Name="btnEdit" FontSize="18" Grid.ColumnSpan="2" Content="Go to Edit" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Margin="85,20,85,20" Click="BtnEdit_Click" Grid.Row="1" Grid.RowSpan="1"/>
+        </Grid>
+
+        <Grid Grid.Row="2" Grid.Column="4" Grid.RowSpan="2" Grid.ColumnSpan="2">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="2*"></RowDefinition>
+                <RowDefinition></RowDefinition>
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition></ColumnDefinition>
+                <ColumnDefinition></ColumnDefinition>
+            </Grid.ColumnDefinitions>
+            <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xE1DF;" FontSize="180" Grid.Row="0" Grid.ColumnSpan="2"/>
+            <Button FontSize="18" Grid.Row="1" Grid.ColumnSpan="2" Content="(Coming soon...)" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Margin="85,20,85,20"></Button>
+        </Grid>
+
+        <Grid Grid.Row="2" Grid.Column="6" Grid.RowSpan="2" Grid.ColumnSpan="2">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="2*"></RowDefinition>
+                <RowDefinition></RowDefinition>
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition></ColumnDefinition>
+                <ColumnDefinition></ColumnDefinition>
+            </Grid.ColumnDefinitions>
+            <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xE1A5;" FontSize="180" Grid.Row="0" Grid.ColumnSpan="2"/>
+            <Button FontSize="18" Grid.Row="1" Grid.ColumnSpan="2" Content="(Coming soon...)" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Margin="85,20,85,20"></Button>
+        </Grid>
     </Grid>
 </Page>

@@ -2,7 +2,6 @@
     x:Class="PresentVideoRecorder.MainPage"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:local="using:MyUWP"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d"
@@ -13,7 +12,7 @@
             <NavigationViewItem Content="Video Record" Tag="RecordPage" Icon="Video" />
             <NavigationViewItem Icon="Save" Content="Video Editor" Tag="EditPage" />
             <NavigationViewItem Icon="Refresh" Content="Code Tanslation" Tag="TransCodePage" />
-            <NavigationViewItem Icon="Upload" Content="Publis Content" Tag="PublishPage" />
+            <NavigationViewItem Icon="Upload" Content="Publish Content" Tag="PublishPage" />
         </NavigationView.MenuItems>
         <NavigationView.Header>
             <Border>
@@ -26,7 +25,8 @@
                 <TextBlock Text="Agile Screen Recorder" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="46" FontWeight="Bold">
                     <TextBlock.Foreground>
                         <AcrylicBrush TintColor="#CC193051" FallbackColor="#FF011E6C" AlwaysUseFallback="False"/>
-                    </TextBlock.Foreground></TextBlock>
+                    </TextBlock.Foreground>
+                </TextBlock>
             </Border>
         </NavigationView.Header>
         <Frame x:Name="contentFrame"/>

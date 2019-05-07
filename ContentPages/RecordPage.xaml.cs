@@ -1,9 +1,13 @@
 ﻿using Microsoft.Graphics.Canvas;
 using Microsoft.Graphics.Canvas.UI.Composition;
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Numerics;
+using System.Runtime.InteropServices.WindowsRuntime;
+using System.Threading;
 using System.Threading.Tasks;
+using System.Timers;
 using Windows.Devices.Enumeration;
 using Windows.Foundation;
 using Windows.Graphics;
@@ -11,14 +15,18 @@ using Windows.Graphics.Capture;
 using Windows.Graphics.DirectX;
 using Windows.Graphics.Display;
 using Windows.Media.Capture;
+using Windows.Media.Core;
+using Windows.Media.Editing;
 using Windows.Media.MediaProperties;
 using Windows.Storage;
+using Windows.Storage.Streams;
 using Windows.System.Display;
 using Windows.UI;
 using Windows.UI.Composition;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Hosting;
+using Windows.UI.Xaml.Media.Imaging;
 using Windows.UI.Xaml.Navigation;
 
 // The Blank Page item template is documented at https://go.microsoft.com/fwlink/?LinkId=234238
@@ -47,6 +55,15 @@ namespace PresentVideoRecorder.ContentPages
         private Compositor _compositor;
         private CompositionDrawingSurface _surface;
 
+
+        private DateTime startTime;
+        private System.Timers.Timer captureTimer;
+
+        private MediaStreamSample sample;
+        ManualResetEvent sampleArrived = new ManualResetEvent(false);
+        int captureInterval = 25; //milliseconds, namely 40 frames per second.
+
+        MediaComposition mediaComposition;
 
         public RecordPage()
         {
@@ -124,6 +141,11 @@ namespace PresentVideoRecorder.ContentPages
             }
         }
 
+        private void CaptureTimer_Elapsed(object sender, ElapsedEventArgs e)
+        {
+            sampleArrived.Set();
+        }
+
         private void Setup()
         {
             _canvasDevice = new CanvasDevice();
@@ -150,6 +172,13 @@ namespace PresentVideoRecorder.ContentPages
             // Stop the previous capture if we had one.
             StopCapture();
 
+            if (null == captureTimer)
+            {
+                captureTimer = new System.Timers.Timer(captureInterval);
+                captureTimer.Elapsed += CaptureTimer_Elapsed;
+            }
+
+            mediaComposition = new MediaComposition();
             _item = item;
             _lastSize = _item.Size;
 
@@ -159,16 +188,13 @@ namespace PresentVideoRecorder.ContentPages
                2, // Number of frames 
                _item.Size); // Size of the buffers 
 
-            _framePool.FrameArrived += (s, a) =>
+            if (!captureTimer.Enabled)
             {
-                // The FrameArrived event is raised for every frame on the thread
-                // that created the Direct3D11CaptureFramePool. This means we 
-                // don't have to do a null-check here, as we know we're the only 
-                // one dequeueing frames in our application.  
+                captureTimer.Start();
+            }
 
-                // NOTE: Disposing the frame retires it and returns  
-                // the buffer to the pool.
-
+            _framePool.FrameArrived += (s, a) =>
+            { 
                 using (var frame = _framePool.TryGetNextFrame())
                 {
                     ProcessFrame(frame);
@@ -181,6 +207,7 @@ namespace PresentVideoRecorder.ContentPages
             };
 
             _session = _framePool.CreateCaptureSession(_item);
+            startTime = DateTime.Now;
             _session.StartCapture();
         }
 
@@ -203,16 +230,25 @@ namespace PresentVideoRecorder.ContentPages
 
             try
             {
-                // Take the D3D11 surface and draw it into a  
-                // Composition surface.
-
-                // Convert our D3D11 surface into a Win2D object.
-                var canvasBitmap = CanvasBitmap.CreateFromDirect3D11Surface(
+                if (!isPaused && sampleArrived.WaitOne(5))
+                {
+                    var canvasBitmap = CanvasBitmap.CreateFromDirect3D11Surface(
                     _canvasDevice,
                     frame.Surface);
 
-                // Helper that handles the drawing for us.
-                FillSurfaceWithBitmap(canvasBitmap);
+                    //MemoryBuffer buff = new MemoryBuffer(
+                    //    );
+                    byte[] buff = new byte[canvasBitmap.SizeInPixels.Height * canvasBitmap.SizeInPixels.Width * 4];
+
+                    IBuffer pixels = buff.AsBuffer();
+                    canvasBitmap.GetPixelBytes(pixels);
+
+                    CreateVideoFromWritableBitmapAsync(pixels, (int)canvasBitmap.SizeInPixels.Width, (int)canvasBitmap.SizeInPixels.Height, TimeSpan.FromMilliseconds(captureInterval), null);
+                    sampleArrived.Reset();
+
+                    //Helper that handles the drawing for us.
+                    FillSurfaceWithBitmap(canvasBitmap);
+                }
             }
 
             // This is the device-lost convention for Win2D.
@@ -267,9 +303,50 @@ namespace PresentVideoRecorder.ContentPages
             } while (_canvasDevice == null);
         }
 
+        private void CreateVideoFromWritableBitmapAsync(IBuffer bitmap,
+            int widthInPixels, int heightInPixels,
+            TimeSpan originalDuration,
+            List<WriteableBitmap> WBs)
+        {
+            var bb = CanvasBitmap.CreateFromBytes(CanvasDevice.GetSharedDevice(),
+                bitmap, widthInPixels, heightInPixels, DirectXPixelFormat.B8G8R8A8UIntNormalized);
+
+            MediaClip mediaClip = MediaClip.CreateFromSurface(bb, originalDuration);
+            mediaComposition.Clips.Add(mediaClip);
+        }
+
+        const string DESKTOP_VIDEO_FILE_NAME_PREFIX = "DesktopCaptureVideo";
+
+        private async Task SaveFile(string fileName = null, StorageFolder folder = null)
+        {
+            if (string.IsNullOrWhiteSpace(fileName))
+            {
+                string fileNameSuffix = DateTime.Now.ToString("yyyyMMdd_HH_mm_ss_fff");
+                fileName = $"DesktopCaptureVideo_{fileNameSuffix}.mp4";
+            }
+
+            StorageFile file;
+            if (null == folder)
+            {
+                var myVideos = await Windows.Storage.StorageLibrary.GetLibraryAsync(Windows.Storage.KnownLibraryId.Videos);
+                file = await myVideos.SaveFolder.CreateFileAsync(fileName, CreationCollisionOption.ReplaceExisting);
+            }
+            else
+            {
+                file = await folder.CreateFileAsync(fileName, CreationCollisionOption.ReplaceExisting);
+            }
+
+            await mediaComposition.SaveAsync(file);
+            mediaComposition = await MediaComposition.LoadAsync(file);
+            var saveOperation = mediaComposition.RenderToFileAsync(file);
+
+            await saveOperation;
+        }
+
 
         public void StopCapture()
         {
+            captureTimer?.Stop();
             _session?.Dispose();
             _framePool?.Dispose();
             _item = null;
@@ -292,6 +369,7 @@ namespace PresentVideoRecorder.ContentPages
             var action = _mediaRecording.FinishAsync();
             action.Completed += async (a, s) =>
             {
+                await SaveFile();
                 await Dispatcher.TryRunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () => 
                 {
                     btnStart.IsEnabled = true;

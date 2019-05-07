@@ -26,5 +26,15 @@ namespace PresentVideoRecorder.ContentPages
         {
             this.InitializeComponent();
         }
+
+        private void BtnEdit_Click(object sender, RoutedEventArgs e)
+        {
+            Frame.Navigate(typeof(EditPage));
+        }
+
+        private void BtnRecord_Click(object sender, RoutedEventArgs e)
+        {
+            Frame.Navigate(typeof(RecordPage));
+        }
     }
 }
