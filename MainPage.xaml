@@ -6,8 +6,7 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d"
-    FontFamily="Microsoft YaHei"
-    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}" RequestedTheme="Light">
+    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}" RequestedTheme="Dark">
 
     <NavigationView x:Name="nvSample" PaneTitle="Function List" Loaded="NvSample_Loaded" ItemInvoked="NvSample_ItemInvoked">
         <NavigationView.MenuItems>
@@ -17,8 +16,19 @@
             <NavigationViewItem Icon="Upload" Content="Publis Content" Tag="PublishPage" />
         </NavigationView.MenuItems>
         <NavigationView.Header>
-            <TextBlock Text="Present Video Recorder" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,20,0,0" FontSize="48"></TextBlock>
+            <Border>
+                <Border.Background>
+                    <LinearGradientBrush EndPoint="1,1" StartPoint="0,0">
+                        <GradientStop Color="{ThemeResource SystemColorGrayTextColor}"/>
+                        <GradientStop Color="#FFEBEEE6" Offset="1"/>
+                    </LinearGradientBrush>
+                </Border.Background>
+                <TextBlock Text="Agile Screen Recorder" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="46" FontWeight="Bold">
+                    <TextBlock.Foreground>
+                        <AcrylicBrush TintColor="#CC193051" FallbackColor="#FF011E6C" AlwaysUseFallback="False"/>
+                    </TextBlock.Foreground></TextBlock>
+            </Border>
         </NavigationView.Header>
-            <Frame x:Name="contentFrame"/>
-        </NavigationView>
+        <Frame x:Name="contentFrame"/>
+    </NavigationView>
 </Page>

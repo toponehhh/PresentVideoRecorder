@@ -122,6 +122,9 @@
     <Compile Include="ContentPages\EditPage.xaml.cs">
       <DependentUpon>EditPage.xaml</DependentUpon>
     </Compile>
+    <Compile Include="ContentPages\LandingPage.xaml.cs">
+      <DependentUpon>LandingPage.xaml</DependentUpon>
+    </Compile>
     <Compile Include="ContentPages\PublishPage.xaml.cs">
       <DependentUpon>PublishPage.xaml</DependentUpon>
     </Compile>
@@ -146,6 +149,7 @@
     <None Include="MyUWP_TemporaryKey.pfx" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Assets\LandingBk.jpg" />
     <Content Include="Assets\thET3NKEB5.jpg" />
     <Content Include="Assets\wb070323054.jpg" />
     <Content Include="Properties\Default.rd.xml">
@@ -165,6 +169,10 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Page Include="ContentPages\EditPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="ContentPages\LandingPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

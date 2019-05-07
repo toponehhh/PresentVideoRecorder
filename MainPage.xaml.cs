@@ -55,7 +55,7 @@ namespace PresentVideoRecorder
 
         private void NvSample_Loaded(object sender, RoutedEventArgs e)
         {
-            contentFrame.Navigate(typeof(RecordPage));
+            contentFrame.Navigate(typeof(LandingPage));
         }
 
         private void NvSample_ItemInvoked(NavigationView sender, NavigationViewItemInvokedEventArgs args)

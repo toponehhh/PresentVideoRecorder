@@ -4,6 +4,7 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:controls="using:Microsoft.Toolkit.Uwp.UI.Controls"
     mc:Ignorable="d"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
 
@@ -42,10 +43,10 @@
             </ComboBox>
         </Grid>
         <CheckBox Content="Camera Video" Grid.Row="2" Grid.Column="0" HorizontalAlignment="Center" VerticalAlignment="Center" IsChecked="True" x:Name="chbCamera" Click="ChbCamera_Click"></CheckBox>
-        <CheckBox Content="Screen Video" Grid.Row="2" Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Center" IsChecked="True"></CheckBox>
+        <CheckBox Content="Screen Video" Grid.Row="2" Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Center" IsChecked="False" x:Name="chbScreen" Click="ChbScreen_Click"></CheckBox>
         <CaptureElement x:Name="PreviewControl" Stretch="Uniform" Grid.Row="3" Grid.Column="0" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="20,0"/>
+        <Border x:Name="ScreenPlayer" Grid.Row="3" Grid.Column="1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="20,0"></Border>
         
-        <Image Source="/Assets/thET3NKEB5.jpg" Grid.Row="3" Grid.Column="1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Stretch="Fill" Margin="20,0"></Image>
         <Grid Grid.Row="4" Grid.Column="0">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="120"></ColumnDefinition>
@@ -56,15 +57,7 @@
             </ComboBox>
         </Grid>
         <Grid Grid.Row="4" Grid.Column="1">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="120"></ColumnDefinition>
-                <ColumnDefinition Width="*"></ColumnDefinition>
-            </Grid.ColumnDefinitions>
-            <TextBlock Text="Desktops：" VerticalAlignment="Center" Grid.Column="0" Margin="20,0,0,0"></TextBlock>
-            <ComboBox Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Stretch" Margin="0,0,20,0">
-                <ComboBoxItem Content="Desktop1"/>
-                <ComboBoxItem Content="Desktop2"/>
-            </ComboBox>
+            <Button x:Name="btnChangeCapureSource" Content="Change Capture Source" VerticalAlignment="Center" HorizontalAlignment="Stretch" Margin="20,0" Click="BtnChangeCapureSource_Click"></Button>
         </Grid>
         <Grid Grid.Row="5" Grid.Column="0" Grid.ColumnSpan="2">
             <Grid.ColumnDefinitions>
@@ -85,7 +78,7 @@
                     </Grid>
                 </Button.Content>
             </Button>
-            <Button Grid.Column="1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="24">
+            <Button Grid.Column="1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="24" x:Name="btnPause" Click="BtnPause_Click" IsEnabled="False">
                 <Button.Content>
                     <Grid HorizontalAlignment="Stretch">
                         <Grid.ColumnDefinitions>
@@ -93,11 +86,11 @@
                             <ColumnDefinition Width="*"></ColumnDefinition>
                         </Grid.ColumnDefinitions>
                         <SymbolIcon Symbol="Pause"  Grid.Column="0" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"></SymbolIcon>
-                        <TextBlock Text="Pause" Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Center"></TextBlock>
+                        <TextBlock Text="Pause" Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Center" x:Name="tbPauseContent"></TextBlock>
                     </Grid>
                 </Button.Content>
             </Button>
-            <Button Grid.Column="2" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="24" x:Name="btnStop" Click="BtnStop_Click">
+            <Button Grid.Column="2" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="24" x:Name="btnStop" Click="BtnStop_Click" IsEnabled="False">
                 <Button.Content>
                     <Grid HorizontalAlignment="Stretch">
                         <Grid.ColumnDefinitions>
@@ -109,7 +102,7 @@
                     </Grid>
                 </Button.Content>
             </Button>
-            <Button Grid.Column="3" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="24">
+            <Button Grid.Column="3" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="24" x:Name="btnMute" Click="BtnMute_Click">
                 <Button.Content>
                     <Grid HorizontalAlignment="Stretch">
                         <Grid.ColumnDefinitions>
@@ -117,10 +110,19 @@
                             <ColumnDefinition Width="*"></ColumnDefinition>
                         </Grid.ColumnDefinitions>
                         <SymbolIcon Symbol="Mute"  Grid.Column="0" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"></SymbolIcon>
-                        <TextBlock Text="Mute" Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Center"></TextBlock>
+                        <TextBlock Text="Mute" Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Center" x:Name="tbMuteContent"></TextBlock>
                     </Grid>
                 </Button.Content>
             </Button>
         </Grid>
+        <controls:Loading x:Name="LoadingControl" Grid.ColumnSpan="2" Grid.RowSpan="6" IsLoading="False">
+            <controls:Loading.Background>
+                <SolidColorBrush Color="Black" Opacity="0.7" />
+            </controls:Loading.Background>
+            <StackPanel Orientation="Horizontal" Padding="12">
+                <ProgressRing IsActive="True" Foreground="Blue" />
+                <TextBlock Text="Please wait for the job to finish :)" Foreground="White" VerticalAlignment="Center"  FontSize="24"/>
+            </StackPanel>
+        </controls:Loading>
     </Grid>
 </Page>
