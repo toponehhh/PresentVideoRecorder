@@ -3,6 +3,7 @@ using Microsoft.Graphics.Canvas.UI.Composition;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
 using System.Numerics;
 using System.Runtime.InteropServices.WindowsRuntime;
 using System.Threading;
@@ -59,9 +60,9 @@ namespace PresentVideoRecorder.ContentPages
         private DateTime startTime;
         private System.Timers.Timer captureTimer;
 
-        private MediaStreamSample sample;
+        private object sampleLocker=new object();
         ManualResetEvent sampleArrived = new ManualResetEvent(false);
-        int captureInterval = 25; //milliseconds, namely 40 frames per second.
+        int captureInterval = 42; //milliseconds, namely 40 frames per second.
 
         MediaComposition mediaComposition;
 
@@ -207,11 +208,11 @@ namespace PresentVideoRecorder.ContentPages
             };
 
             _session = _framePool.CreateCaptureSession(_item);
-            startTime = DateTime.Now;
+            //startTime = DateTime.Now;
             _session.StartCapture();
         }
 
-        private void ProcessFrame(Direct3D11CaptureFrame frame)
+        private async void ProcessFrame(Direct3D11CaptureFrame frame)
         {
             // Resize and device-lost leverage the same function on the
             // Direct3D11CaptureFramePool. Refactoring it this way avoids 
@@ -231,23 +232,44 @@ namespace PresentVideoRecorder.ContentPages
             try
             {
                 if (!isPaused && sampleArrived.WaitOne(5))
+                //if (!isPaused)
                 {
+
                     var canvasBitmap = CanvasBitmap.CreateFromDirect3D11Surface(
                     _canvasDevice,
                     frame.Surface);
 
-                    //MemoryBuffer buff = new MemoryBuffer(
-                    //    );
-                    byte[] buff = new byte[canvasBitmap.SizeInPixels.Height * canvasBitmap.SizeInPixels.Width * 4];
+                    //byte[] buff = new byte[canvasBitmap.SizeInPixels.Height * canvasBitmap.SizeInPixels.Width * 4];
 
-                    IBuffer pixels = buff.AsBuffer();
-                    canvasBitmap.GetPixelBytes(pixels);
+                    //IBuffer pixels = buff.AsBuffer();
+                    //canvasBitmap.GetPixelBytes(pixels);
+                    //var stream = new MemoryStream().AsRandomAccessStream();
+                    CanvasRenderTarget renderTarget = null;
+                    renderTarget = new CanvasRenderTarget(_canvasDevice, canvasBitmap.SizeInPixels.Width, canvasBitmap.SizeInPixels.Height, 96);
+                    using (CanvasDrawingSession ds = renderTarget.CreateDrawingSession())
+                    {
+                        ds.Clear(Colors.Black);
+                        ds.DrawImage(canvasBitmap);
+                    }
+                    
 
-                    CreateVideoFromWritableBitmapAsync(pixels, (int)canvasBitmap.SizeInPixels.Width, (int)canvasBitmap.SizeInPixels.Height, TimeSpan.FromMilliseconds(captureInterval), null);
-                    sampleArrived.Reset();
+                    MediaClip mediaClip = MediaClip.CreateFromSurface(renderTarget, TimeSpan.FromMilliseconds(captureInterval));
+                    mediaComposition.Clips.Add(mediaClip);
+
+
+                    //CreateVideoFromWritableBitmapAsync(pixels, (int)canvasBitmap.SizeInPixels.Width, (int)canvasBitmap.SizeInPixels.Height, TimeSpan.FromMilliseconds(captureInterval), null);
+
 
                     //Helper that handles the drawing for us.
                     FillSurfaceWithBitmap(canvasBitmap);
+
+
+                    //var can2 = CanvasBitmap.CreateFromDirect3D11Surface(
+                    //_canvasDevice,
+                    //frame.Surface);
+                    //var clip = MediaClip.CreateFromSurface(frame.Surface, TimeSpan.FromMilliseconds(captureInterval));
+                    //mediaComposition.Clips.Add(clip);
+                    sampleArrived.Reset();
                 }
             }
 
@@ -308,38 +330,46 @@ namespace PresentVideoRecorder.ContentPages
             TimeSpan originalDuration,
             List<WriteableBitmap> WBs)
         {
-            var bb = CanvasBitmap.CreateFromBytes(CanvasDevice.GetSharedDevice(),
-                bitmap, widthInPixels, heightInPixels, DirectXPixelFormat.B8G8R8A8UIntNormalized);
+            //var bb = CanvasBitmap.CreateFromBytes(_canvasDevice,
+            //    bitmap, widthInPixels, heightInPixels, DirectXPixelFormat.B8G8R8A8UIntNormalized);
 
-            MediaClip mediaClip = MediaClip.CreateFromSurface(bb, originalDuration);
+            CanvasRenderTarget renderTarget = null;
+            using (CanvasBitmap canvas = CanvasBitmap.CreateFromBytes(_canvasDevice, bitmap, widthInPixels, heightInPixels, DirectXPixelFormat.B8G8R8A8UIntNormalized))
+            {
+                renderTarget = new CanvasRenderTarget(_canvasDevice, canvas.SizeInPixels.Width, canvas.SizeInPixels.Height, 96);
+                using (CanvasDrawingSession ds = renderTarget.CreateDrawingSession())
+                {
+                    ds.Clear(Colors.Black);
+                    ds.DrawImage(canvas);
+                }
+            }
+
+            MediaClip mediaClip = MediaClip.CreateFromSurface(renderTarget, originalDuration);
             mediaComposition.Clips.Add(mediaClip);
         }
 
         const string DESKTOP_VIDEO_FILE_NAME_PREFIX = "DesktopCaptureVideo";
 
-        private async Task SaveFile(string fileName = null, StorageFolder folder = null)
+        private async void SaveFile(string fileName = null, StorageFolder folder = null)
         {
             if (string.IsNullOrWhiteSpace(fileName))
             {
-                string fileNameSuffix = DateTime.Now.ToString("yyyyMMdd_HH_mm_ss_fff");
-                fileName = $"DesktopCaptureVideo_{fileNameSuffix}.mp4";
+                //string fileNameSuffix = DateTime.Now.ToString("yyyyMMdd_HH_mm_ss_fff");
+                fileName = $"DesktopCaptureVideo.mp4";
             }
 
             StorageFile file;
             if (null == folder)
             {
                 var myVideos = await Windows.Storage.StorageLibrary.GetLibraryAsync(Windows.Storage.KnownLibraryId.Videos);
-                file = await myVideos.SaveFolder.CreateFileAsync(fileName, CreationCollisionOption.ReplaceExisting);
+                file = await myVideos.SaveFolder.CreateFileAsync(fileName, CreationCollisionOption.GenerateUniqueName);
             }
             else
             {
                 file = await folder.CreateFileAsync(fileName, CreationCollisionOption.ReplaceExisting);
             }
 
-            await mediaComposition.SaveAsync(file);
-            mediaComposition = await MediaComposition.LoadAsync(file);
-            var saveOperation = mediaComposition.RenderToFileAsync(file);
-
+            var saveOperation = mediaComposition.RenderToFileAsync(file,MediaTrimmingPreference.Fast);
             await saveOperation;
         }
 
@@ -364,12 +394,13 @@ namespace PresentVideoRecorder.ContentPages
             btnStop.IsEnabled = btnPause.IsEnabled = true;
         }
 
-        private void BtnStop_Click(object sender, RoutedEventArgs e)
+        private async void BtnStop_Click(object sender, RoutedEventArgs e)
         {
             var action = _mediaRecording.FinishAsync();
             action.Completed += async (a, s) =>
             {
-                await SaveFile();
+                StopCapture();
+                SaveFile();
                 await Dispatcher.TryRunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () => 
                 {
                     btnStart.IsEnabled = true;
