@@ -47,7 +47,7 @@
                 <ColumnDefinition Width="120"></ColumnDefinition>
                 <ColumnDefinition Width="*"></ColumnDefinition>
             </Grid.ColumnDefinitions>
-            <TextBlock Text="选择内容范围：" VerticalAlignment="Center" Grid.Column="0"></TextBlock>
+            <TextBlock Text="Select Range：" VerticalAlignment="Center" Grid.Column="0"></TextBlock>
             <controls:RangeSelector x:Name="durationSelector"  Minimum="0" Maximum="100"  
                                     StepFrequency="1" 
                                     Grid.Column="1" 
