@@ -27,20 +27,20 @@
                 <ColumnDefinition Width="*"></ColumnDefinition>
                 <ColumnDefinition Width="50"></ColumnDefinition>
             </Grid.ColumnDefinitions>
-            <TextBlock Text="Record Path：" VerticalAlignment="Center" Grid.Column="0"></TextBlock>
+            <TextBlock Text="课程路径：" VerticalAlignment="Center" Grid.Column="0"></TextBlock>
             <TextBox Height="35" VerticalAlignment="Center" HorizontalAlignment="Stretch" Grid.Column="1" Margin="0,0,20,0"></TextBox>
             <Button Height="35" HorizontalAlignment="Stretch" Grid.Column="2" Content="..."></Button>
         </Grid>
-        <CheckBox Content="HD Size" Grid.Row="1" Grid.Column="0" HorizontalAlignment="Center" VerticalAlignment="Center" IsChecked="True"></CheckBox>
-        <CheckBox Content="SD Size" Grid.Row="1" Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Center" IsChecked="True"></CheckBox>
-        <CheckBox Content="LD Size" Grid.Row="1" Grid.Column="2" HorizontalAlignment="Center" VerticalAlignment="Center" IsChecked="True"></CheckBox>
+        <CheckBox Content="高清视频 大小" Grid.Row="1" Grid.Column="0" HorizontalAlignment="Center" VerticalAlignment="Center" IsChecked="True"></CheckBox>
+        <CheckBox Content="标清视频 大小" Grid.Row="1" Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Center" IsChecked="True"></CheckBox>
+        <CheckBox Content="流畅视频 大小" Grid.Row="1" Grid.Column="2" HorizontalAlignment="Center" VerticalAlignment="Center" IsChecked="True"></CheckBox>
         <Grid Grid.Row="2" Grid.Column="0" Margin="6">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="80"></ColumnDefinition>
                 <ColumnDefinition Width="*"></ColumnDefinition>
                 <ColumnDefinition Width="40"></ColumnDefinition>
             </Grid.ColumnDefinitions>
-            <TextBlock Text="Path：" VerticalAlignment="Center" Grid.Column="0"></TextBlock>
+            <TextBlock Text="存放路径：" VerticalAlignment="Center" Grid.Column="0"></TextBlock>
             <TextBox Height="35" VerticalAlignment="Center" HorizontalAlignment="Stretch" Grid.Column="1" ></TextBox>
             <Button Height="35" HorizontalAlignment="Stretch" Grid.Column="2" Content="..."></Button>
         </Grid>
@@ -50,7 +50,7 @@
                 <ColumnDefinition Width="*"></ColumnDefinition>
                 <ColumnDefinition Width="40"></ColumnDefinition>
             </Grid.ColumnDefinitions>
-            <TextBlock Text="Path：" VerticalAlignment="Center" Grid.Column="0"></TextBlock>
+            <TextBlock Text="存放路径：" VerticalAlignment="Center" Grid.Column="0"></TextBlock>
             <TextBox Height="35" VerticalAlignment="Center" HorizontalAlignment="Stretch" Grid.Column="1" ></TextBox>
             <Button Height="35" HorizontalAlignment="Stretch" Grid.Column="2" Content="..."></Button>
         </Grid>
@@ -60,7 +60,7 @@
                 <ColumnDefinition Width="*"></ColumnDefinition>
                 <ColumnDefinition Width="40"></ColumnDefinition>
             </Grid.ColumnDefinitions>
-            <TextBlock Text="Path：" VerticalAlignment="Center" Grid.Column="0"></TextBlock>
+            <TextBlock Text="存放路径：" VerticalAlignment="Center" Grid.Column="0"></TextBlock>
             <TextBox Height="35" VerticalAlignment="Center" HorizontalAlignment="Stretch" Grid.Column="1" ></TextBox>
             <Button Height="35" HorizontalAlignment="Stretch" Grid.Column="2" Content="..."></Button>
         </Grid>
@@ -70,7 +70,7 @@
                 <ColumnDefinition Width="80"></ColumnDefinition>
                 <ColumnDefinition Width="*"></ColumnDefinition>
             </Grid.ColumnDefinitions>
-            <TextBlock Text="Progress：" VerticalAlignment="Center" Grid.Column="0"></TextBlock>
+            <TextBlock Text="转换进度：" VerticalAlignment="Center" Grid.Column="0"></TextBlock>
             <ProgressBar Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Stretch"  Value="20" Height="30"/>
         </Grid>
         <Grid Grid.Row="3" Grid.Column="1" Margin="6">
@@ -78,7 +78,7 @@
                 <ColumnDefinition Width="80"></ColumnDefinition>
                 <ColumnDefinition Width="*"></ColumnDefinition>
             </Grid.ColumnDefinitions>
-            <TextBlock Text="Progress：" VerticalAlignment="Center" Grid.Column="0"></TextBlock>
+            <TextBlock Text="转换进度：" VerticalAlignment="Center" Grid.Column="0"></TextBlock>
             <ProgressBar Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Stretch"  Value="40" Height="30"/>
         </Grid>
         <Grid Grid.Row="3" Grid.Column="2" Margin="6">
@@ -86,7 +86,7 @@
                 <ColumnDefinition Width="80"></ColumnDefinition>
                 <ColumnDefinition Width="*"></ColumnDefinition>
             </Grid.ColumnDefinitions>
-            <TextBlock Text="Progress：" VerticalAlignment="Center" Grid.Column="0"></TextBlock>
+            <TextBlock Text="转换进度：" VerticalAlignment="Center" Grid.Column="0"></TextBlock>
             <ProgressBar Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Stretch"  Value="60" Height="30"/>
         </Grid>
         <Grid Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="3">
@@ -103,7 +103,7 @@
                             <ColumnDefinition Width="*"></ColumnDefinition>
                         </Grid.ColumnDefinitions>
                         <SymbolIcon Symbol ="GoToStart" Grid.Column="0" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"></SymbolIcon>
-                        <TextBlock Text=" Begin to TansCode" Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Center"></TextBlock>
+                        <TextBlock Text="开始转码" Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Center"></TextBlock>
                     </Grid>
                 </Button.Content>
             </Button>
@@ -114,8 +114,8 @@
                             <ColumnDefinition Width="36"></ColumnDefinition>
                             <ColumnDefinition Width="*"></ColumnDefinition>
                         </Grid.ColumnDefinitions>
-                        <SymbolIcon Symbol="Pause"  Grid.Column="0" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"></SymbolIcon>
-                        <TextBlock Text="Pause" Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Center"></TextBlock>
+                        <SymbolIcon Symbol="Stop"  Grid.Column="0" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"></SymbolIcon>
+                        <TextBlock Text="停止转码" Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Center"></TextBlock>
                     </Grid>
                 </Button.Content>
             </Button>
@@ -126,8 +126,8 @@
                             <ColumnDefinition Width="36"></ColumnDefinition>
                             <ColumnDefinition Width="*"></ColumnDefinition>
                         </Grid.ColumnDefinitions>
-                        <SymbolIcon Symbol="Stop"  Grid.Column="0" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"></SymbolIcon>
-                        <TextBlock Text="Cancel" Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Center"></TextBlock>
+                        <SymbolIcon Symbol="Cancel"  Grid.Column="0" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
+                        <TextBlock Text="取消转码" Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Center"></TextBlock>
                     </Grid>
                 </Button.Content>
             </Button>

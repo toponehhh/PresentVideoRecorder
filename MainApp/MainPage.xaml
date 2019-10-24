@@ -7,12 +7,12 @@
     mc:Ignorable="d"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}" RequestedTheme="Dark">
 
-    <NavigationView x:Name="nvSample" PaneTitle="Function List" Loaded="NvSample_Loaded" ItemInvoked="NvSample_ItemInvoked">
+    <NavigationView x:Name="nvSample" PaneTitle="功能选项" Loaded="NvSample_Loaded" ItemInvoked="NvSample_ItemInvoked">
         <NavigationView.MenuItems>
-            <NavigationViewItem Content="Video Record" Tag="RecordPage" Icon="Video" />
-            <NavigationViewItem Icon="Save" Content="Video Editor" Tag="EditPage" />
-            <NavigationViewItem Icon="Refresh" Content="Code Tanslation" Tag="TransCodePage" />
-            <NavigationViewItem Icon="Upload" Content="Publish Content" Tag="PublishPage" />
+            <NavigationViewItem Content="课程录制" Tag="RecordPage" Icon="Video" />
+            <NavigationViewItem Content="视频编辑" Icon="Save" Tag="EditPage" />
+            <NavigationViewItem Content="视频转码" Icon="Refresh" Tag="TransCodePage" />
+            <NavigationViewItem Content="课程发布" Icon="Upload" Tag="PublishPage" />
         </NavigationView.MenuItems>
         <NavigationView.Header>
             <Border>
@@ -22,7 +22,7 @@
                         <GradientStop Color="#FFEBEEE6" Offset="1"/>
                     </LinearGradientBrush>
                 </Border.Background>
-                <TextBlock Text="Agile Screen Recorder" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="46" FontWeight="Bold">
+                <TextBlock Text="中山医院在线学习视频录制系统" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="46" FontWeight="Bold">
                     <TextBlock.Foreground>
                         <AcrylicBrush TintColor="#CC193051" FallbackColor="#FF011E6C" AlwaysUseFallback="False"/>
                     </TextBlock.Foreground>

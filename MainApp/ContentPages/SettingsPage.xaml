@@ -24,22 +24,22 @@
             <ColumnDefinition Width="120"></ColumnDefinition>
             <ColumnDefinition Width="*"></ColumnDefinition>
         </Grid.ColumnDefinitions>
-        <TextBlock Text="Record Path：" Grid.Row="0" VerticalAlignment="Center"></TextBlock>
-        <TextBlock Text="Temp Path：" Grid.Row="1" VerticalAlignment="Center"></TextBlock>
-        <TextBlock Text="Default Sound：" Grid.Row="2" VerticalAlignment="Center"></TextBlock>
-        <TextBlock Text="Publish Addr：" Grid.Row="3" VerticalAlignment="Center"></TextBlock>
-        <TextBlock Text="HD Size：" Grid.Row="4" VerticalAlignment="Center"></TextBlock>
-        <TextBlock Text="SD Size：" Grid.Row="5" VerticalAlignment="Center"></TextBlock>
-        <TextBlock Text="LD Size：" Grid.Row="6" VerticalAlignment="Center"></TextBlock>
-        <TextBlock Text="Tans Path：" Grid.Row="7" VerticalAlignment="Center"></TextBlock>
+        <TextBlock Text="默认课程存放路径：" Grid.Row="0" VerticalAlignment="Center"></TextBlock>
+        <TextBlock Text="临时文件路径：" Grid.Row="1" VerticalAlignment="Center"></TextBlock>
+        <TextBlock Text="默认声音来源：" Grid.Row="2" VerticalAlignment="Center"></TextBlock>
+        <TextBlock Text="默认发布地址：" Grid.Row="3" VerticalAlignment="Center"></TextBlock>
+        <TextBlock Text="默认高清视频大小：" Grid.Row="4" VerticalAlignment="Center"></TextBlock>
+        <TextBlock Text="默认标清视频大小：" Grid.Row="5" VerticalAlignment="Center"></TextBlock>
+        <TextBlock Text="默认流畅视频大小：" Grid.Row="6" VerticalAlignment="Center"></TextBlock>
+        <TextBlock Text="默认转码文件路径：" Grid.Row="7" VerticalAlignment="Center"></TextBlock>
 
         <TextBox Grid.Row="0" Grid.Column="1" Height="38" Margin="12,0"></TextBox>
         <TextBox Grid.Row="1" Grid.Column="1" Height="38" Margin="12,0"></TextBox>
         <TextBox Grid.Row="3" Grid.Column="1" Height="38" Margin="12,0"></TextBox>
         <TextBox Grid.Row="7" Grid.Column="1" Height="38" Margin="12,0"></TextBox>
         <ComboBox Grid.Row="2" Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Stretch" Height="38" Margin="12,0">
-            <ComboBoxItem Content="Mic" IsSelected="True"/>
-            <ComboBoxItem Content="Desktop"/>
+            <ComboBoxItem Content="麦克风" IsSelected="True"/>
+            <ComboBoxItem Content="桌面"/>
         </ComboBox>
         <ComboBox Grid.Row="4" Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Stretch" Height="38" Margin="12,0">
             <ComboBoxItem Content="540P" IsSelected="True"/>

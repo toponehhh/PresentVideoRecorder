@@ -9,14 +9,14 @@
   IgnorableNamespaces="uap mp uap6 uap3">
 
   <Identity
-    Name="d3b2accc-a6db-47b3-a0e5-50fc95baeaac"
+    Name="ZsyyVideoRecorder"
     Publisher="CN=ZSYY"
     Version="1.0.0.0" />
 
   <mp:PhoneIdentity PhoneProductId="d3b2accc-a6db-47b3-a0e5-50fc95baeaac" PhonePublisherId="00000000-0000-0000-0000-000000000000"/>
 
   <Properties>
-    <DisplayName>PresentVideoRecorder</DisplayName>
+    <DisplayName>ZsyyPresentVideoRecorder</DisplayName>
     <PublisherDisplayName>Donald</PublisherDisplayName>
     <Logo>Assets\StoreLogo.png</Logo>
   </Properties>
@@ -42,6 +42,9 @@
         <uap:DefaultTile Wide310x150Logo="Assets\Wide310x150Logo.png"/>
         <uap:SplashScreen Image="Assets\SplashScreen.png" />
       </uap:VisualElements>
+      <Extensions>
+        <uap:Extension Category="windows.cameraSettings"/>
+      </Extensions>
     </Application>
   </Applications>
 
@@ -51,6 +54,9 @@
     <uap6:Capability Name="graphicsCapture"/>
     <uap:Capability Name="picturesLibrary"/>
     <uap3:Capability Name="backgroundMediaPlayback"/>
+    <uap:Capability Name="removableStorage"/>
+    <uap:Capability Name="musicLibrary"/>
+    <uap:Capability Name="userAccountInformation"/>
     <DeviceCapability Name="microphone"/>
     <DeviceCapability Name="webcam"/>
   </Capabilities>
