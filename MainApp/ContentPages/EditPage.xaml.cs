@@ -33,33 +33,28 @@ namespace PresentVideoRecorder.ContentPages
             this.InitializeComponent();
         }
 
-        MediaComposition desktopMediaComposition;
+        private MediaComposition desktopMediaComposition, cameraMediaComposition;
+        private StorageFile cameraVideoFile, desktopVideoFile;
 
-        MediaComposition cameraMediaComposition;
-
-        private async void ButtonPlay_Click(object sender, RoutedEventArgs e)
+        private void ButtonPlay_Click(object sender, RoutedEventArgs e)
         {
-            //CommonFileQuery fileQuery = CommonFileQuery.OrderByName;
-            //StorageFile desktopVideoFile = ApplicationData.Current.LocalFolder.GetFilesAsync(CommonFileQuery.OrderByName, )
-            desktopMediaComposition = new MediaComposition();
-            var desktopVideoFile = _pickedFiles[1];
-            var carmeraVideoFile = _pickedFiles[0];
-            var videoTask = PreviewAsync(desktopMediaComposition, desktopVideoFile, desktopVideoPlayer);
-            var cameraTask = PreviewAsync(cameraMediaComposition, carmeraVideoFile, cameraVideoPlayer);
-            //Task.WaitAll( cameraTask);
-            
+            PreviewAsync(desktopMediaComposition, desktopVideoFile, desktopVideoPlayer);
+            PreviewAsync(cameraMediaComposition, cameraVideoFile, cameraVideoPlayer);
         }
 
-        private async System.Threading.Tasks.Task PreviewAsync(
+        private void ButtonStop_Click(object sender, RoutedEventArgs e)
+        {
+            desktopVideoPlayer.Stop();
+            cameraVideoPlayer.Stop();
+        }
+
+        private async void PreviewAsync(
             MediaComposition mediaComposition, 
             StorageFile mediaFile,
             MediaElement mediaPlayer)
         {
-            //CommonFileQuery fileQuery = CommonFileQuery.OrderByName;
-            //StorageFile desktopVideoFile = ApplicationData.Current.LocalFolder.GetFilesAsync(CommonFileQuery.OrderByName, )
             mediaComposition = new MediaComposition();
-            var desktopVideoFile = mediaFile;
-            MediaClip mc = await MediaClip.CreateFromFileAsync(desktopVideoFile);
+            MediaClip mc = await MediaClip.CreateFromFileAsync(mediaFile);
 
             durationSelector.Minimum = 0;
             durationSelector.Maximum = (int)mc.OriginalDuration.TotalSeconds;
@@ -72,28 +67,25 @@ namespace PresentVideoRecorder.ContentPages
                 Convert.ToInt32(mediaPlayer.ActualHeight));
 
             mediaPlayer.SetMediaStreamSource(mss);
-            mediaPlayer.Pause();
+            //mediaPlayer.Pause();
         }
-
-        
-
-        private IReadOnlyList<StorageFile> _pickedFiles;
 
         private async void ButtonPickButton_Click(object sender, RoutedEventArgs e)
         {
-            var picker = new Windows.Storage.Pickers.FileOpenPicker();
+            var picker = new Windows.Storage.Pickers.FolderPicker();
             picker.SuggestedStartLocation = Windows.Storage.Pickers.PickerLocationId.VideosLibrary;
-            picker.FileTypeFilter.Add(".mp4");
-            _pickedFiles = await picker.PickMultipleFilesAsync();
-            if (_pickedFiles == null)
+            picker.FileTypeFilter.Add("*");
+            var pickedFolder = await picker.PickSingleFolderAsync();
+            
+            if (pickedFolder != null)
             {
-                //ShowErrorMessage("File picking cancelled");
-                return;
+                Windows.Storage.AccessCache.StorageApplicationPermissions.FutureAccessList.AddOrReplace("PickedFolderToken", pickedFolder);
+                txtVideoPath.Text = pickedFolder.Path;
+                cameraVideoFile = await pickedFolder.GetFileAsync("CameraVideo.mp4");
+                desktopVideoFile = await pickedFolder.GetFileAsync("DesktopCaptureVideo.mp4");
             }
-
         }
 
-        //private 
 
         private void DurationSelector_ValueChanged(object sender, Microsoft.Toolkit.Uwp.UI.Controls.RangeChangedEventArgs e)
         {

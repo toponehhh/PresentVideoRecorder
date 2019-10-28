@@ -28,21 +28,24 @@
                 <ColumnDefinition Width="50"></ColumnDefinition>
             </Grid.ColumnDefinitions>
             <TextBlock Text="课程存放路径：" VerticalAlignment="Center" Grid.Column="0"></TextBlock>
-            <TextBox Height="35" VerticalAlignment="Center" HorizontalAlignment="Stretch" Grid.Column="1" Margin="0,0,20,0"></TextBox>
-            <Button Height="35" HorizontalAlignment="Stretch" Grid.Column="2" Content="..."></Button>
+            <TextBox x:Name="txtSavePath" Height="35" VerticalAlignment="Center" HorizontalAlignment="Stretch" Grid.Column="1" Margin="0,0,20,0"></TextBox>
+            <Button x:Name="btnSavePath" Height="35" HorizontalAlignment="Stretch" Grid.Column="2" Content="..." Click="btnSavePath_Click"></Button>
         </Grid>
         <Grid Grid.Row="1" Grid.Column="0" >
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="120"></ColumnDefinition>
                 <ColumnDefinition Width="*"></ColumnDefinition>
             </Grid.ColumnDefinitions>
-            <TextBlock Text="录制声音来源：" VerticalAlignment="Center" Grid.Column="0"></TextBlock>
+            <!--<TextBlock Text="录制声音来源：" VerticalAlignment="Center" Grid.Column="0"></TextBlock>
             <ComboBox Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Stretch">
                 <ComboBoxItem Content="Mic"/>
                 <ComboBoxItem Content="Screen Video"/>
-            </ComboBox>
+            </ComboBox>-->
+            <TextBlock Text="录制时间：" VerticalAlignment="Center" Grid.Column="0"></TextBlock>
+            <TextBlock x:Name="txbCount" Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Stretch"/>
+
         </Grid>
-        <CheckBox Content="摄像机视频" Grid.Row="2" Grid.Column="0" HorizontalAlignment="Center" VerticalAlignment="Center" IsChecked="True" x:Name="chbCamera" Click="ChbCamera_Click"></CheckBox>
+        <CheckBox Content="摄像机视频" Grid.Row="2" Grid.Column="0" HorizontalAlignment="Center" VerticalAlignment="Center" x:Name="chbCamera" Click="ChbCamera_Click"></CheckBox>
         <CheckBox Content="屏幕视频" Grid.Row="2" Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Center" IsChecked="False" x:Name="chbScreen" Click="ChbScreen_Click"></CheckBox>
         <CaptureElement x:Name="PreviewControl" Stretch="Uniform" Grid.Row="3" Grid.Column="0" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="20,0"/>
         <Border x:Name="ScreenPlayer" Grid.Row="3" Grid.Column="1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="20,0"></Border>
