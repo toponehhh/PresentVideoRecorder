@@ -183,10 +183,10 @@ namespace PresentVideoRecorder.ContentPages
             // Some encoders get mad if you give them odd numbers.
             width = EnsureEven(width);
             height = EnsureEven(height);
-            
+
 
             // Find a place to put our vidoe for now
-            var file = await _videoSaveFolder.CreateFileAsync($"{DESKTOP_VIDEO_FILE_NAME_PREFIX}.mp4");
+            var file = await _videoSaveFolder.CreateFileAsync($"{DESKTOP_VIDEO_FILE_NAME_PREFIX}.mp4", CreationCollisionOption.GenerateUniqueName);
 
             // Kick off the encoding
             try
@@ -471,7 +471,10 @@ namespace PresentVideoRecorder.ContentPages
         protected override async void OnNavigatingFrom(NavigatingCancelEventArgs e)
         {
             StopCapture();
-            await mediaCapture.StopPreviewAsync();
+            if (mediaCapture != null)
+            {
+                await mediaCapture?.StopPreviewAsync();
+            }
             base.OnNavigatingFrom(e);
         }
 
