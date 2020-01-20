@@ -41,7 +41,7 @@
                 <ComboBoxItem Content="Mic"/>
                 <ComboBoxItem Content="Screen Video"/>
             </ComboBox>-->
-            <TextBlock Text="录制时间：" VerticalAlignment="Center" Grid.Column="0"></TextBlock>
+            <TextBlock Text="课程名称：" VerticalAlignment="Center" Grid.Column="0"></TextBlock>
             <TextBlock x:Name="txbCount" Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Stretch"/>
 
         </Grid>
