@@ -1,4 +1,5 @@
-﻿using System;
+﻿using PresentVideoRecorder.Helpers;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -71,6 +72,7 @@ namespace PresentVideoRecorder
                 // Ensure the current window is active
                 Window.Current.Activate();
             }
+            Logger.Instance.Info("Application started!");
         }
 
         /// <summary>

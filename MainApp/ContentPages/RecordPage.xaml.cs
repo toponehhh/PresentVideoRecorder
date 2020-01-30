@@ -1,6 +1,7 @@
 ﻿using CaptureEncoder;
 using Microsoft.Graphics.Canvas;
 using Microsoft.Graphics.Canvas.UI.Composition;
+using PresentVideoRecorder.ViewModels.ContentPageViewModels;
 using System;
 using System.Diagnostics;
 using System.Numerics;
@@ -61,20 +62,20 @@ namespace PresentVideoRecorder.ContentPages
         public RecordPage()
         {
             this.InitializeComponent();
-            if (!GraphicsCaptureSession.IsSupported())
-            {
-                IsEnabled = false;
+            //if (!GraphicsCaptureSession.IsSupported())
+            //{
+            //    IsEnabled = false;
 
-                var dialog = new MessageDialog("Screen capture is not supported on this device for this release of Windows!", "Screen capture unsupported");
+            //    var dialog = new MessageDialog("Screen capture is not supported on this device for this release of Windows!", "Screen capture unsupported");
 
-                var ignored = dialog.ShowAsync();
-                return;
-            }
-            else
-            {
-                _device = Direct3D11Helpers.CreateDevice();
-                InitScreenCapturePreviewArea();
-            }
+            //    var ignored = dialog.ShowAsync();
+            //    return;
+            //}
+            //else
+            //{
+            //    _device = Direct3D11Helpers.CreateDevice();
+            //    InitScreenCapturePreviewArea();
+            //}
         }
 
         private void _recorderCountTimer_Tick(object sender, object e)
@@ -112,27 +113,30 @@ namespace PresentVideoRecorder.ContentPages
             }
         }
 
-        protected override async void OnNavigatedTo(NavigationEventArgs e)
+        protected override void OnNavigatedTo(NavigationEventArgs e)
         {
-            //await StartPreviewAsync();
-            await GetVideoProfileSupportedDevicesAsync();
+            var viewModel = DataContext as RecordPageViewModel;
+            if (viewModel != null)
+            {
+                viewModel.InitCaptureDeviceWithUIControl(PreviewControl, ScreenPlayer);
+            }
         }
 
         public async Task GetVideoProfileSupportedDevicesAsync()
         {
-            string deviceId = string.Empty;
+            //string deviceId = string.Empty;
 
-            // Finds all video capture devices
-            DeviceInformationCollection devices = await DeviceInformation.FindAllAsync(DeviceClass.VideoCapture);
+            //// Finds all video capture devices
+            //DeviceInformationCollection devices = await DeviceInformation.FindAllAsync(DeviceClass.VideoCapture);
 
-            cbCameras.Items.Clear();
-            foreach (var device in devices)
-            {
-                ComboBoxItem item = new ComboBoxItem();
-                item.Content = device.Name;
-                item.IsSelected = true;
-                cbCameras.Items.Add(item);
-            }
+            //cbCameras.Items.Clear();
+            //foreach (var device in devices)
+            //{
+            //    ComboBoxItem item = new ComboBoxItem();
+            //    item.Content = device.Name;
+            //    item.IsSelected = true;
+            //    cbCameras.Items.Add(item);
+            //}
         }
         
         public async Task StartScreenCaptureAsync()
@@ -393,89 +397,89 @@ namespace PresentVideoRecorder.ContentPages
 
         private async void Start_Click(object sender, RoutedEventArgs e)
         {
-            if (_videoSaveFolder != null)
-            {
-                StorageFile file = await _videoSaveFolder.CreateFileAsync("CameraVideo.mp4", CreationCollisionOption.GenerateUniqueName);
-                _mediaRecording = await mediaCapture.PrepareLowLagRecordToStorageFileAsync(MediaEncodingProfile.CreateMp4(VideoEncodingQuality.Auto), file);
-                await _mediaRecording.StartAsync();
-                RecordScreenCaptureAsync();
-                _recordWatch = new Stopwatch();
-                _recorderCountTimer = new DispatcherTimer();
-                _recorderCountTimer.Interval = TimeSpan.FromSeconds(1d);
-                _recorderCountTimer.Tick += (obj, et) => 
-                {
-                    if (_recordWatch.IsRunning)
-                    {
-                        txbCount.Text = _recordWatch.Elapsed.ToString(@"hh\:mm\:ss");
-                    }
-                };
+            //if (_videoSaveFolder != null)
+            //{
+            //    StorageFile file = await _videoSaveFolder.CreateFileAsync("CameraVideo.mp4", CreationCollisionOption.GenerateUniqueName);
+            //    _mediaRecording = await mediaCapture.PrepareLowLagRecordToStorageFileAsync(MediaEncodingProfile.CreateMp4(VideoEncodingQuality.Auto), file);
+            //    await _mediaRecording.StartAsync();
+            //    RecordScreenCaptureAsync();
+            //    _recordWatch = new Stopwatch();
+            //    _recorderCountTimer = new DispatcherTimer();
+            //    _recorderCountTimer.Interval = TimeSpan.FromSeconds(1d);
+            //    _recorderCountTimer.Tick += (obj, et) => 
+            //    {
+            //        if (_recordWatch.IsRunning)
+            //        {
+            //            //txbCount.Text = _recordWatch.Elapsed.ToString(@"hh\:mm\:ss");
+            //        }
+            //    };
                 
-                _recorderCountTimer.Start();
-                _recordWatch.Start();
+            //    _recorderCountTimer.Start();
+            //    _recordWatch.Start();
 
-                btnStart.IsEnabled = false;
-                btnStop.IsEnabled = btnPause.IsEnabled = true;
-            }
+            //    btnStart.IsEnabled = false;
+            //    btnStop.IsEnabled = btnPause.IsEnabled = true;
+            //}
         }
 
         private async void BtnStop_Click(object sender, RoutedEventArgs e)
         {
-            _encoder?.Dispose();
-            await _mediaRecording.StopAsync();
-            var action = _mediaRecording.FinishAsync();
-            action.Completed += async (a, s) =>
-            {
-                await Dispatcher.TryRunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () => 
-                {
-                    _recorderCountTimer.Stop();
+            //_encoder?.Dispose();
+            //await _mediaRecording.StopAsync();
+            //var action = _mediaRecording.FinishAsync();
+            //action.Completed += async (a, s) =>
+            //{
+            //    await Dispatcher.TryRunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () => 
+            //    {
+            //        _recorderCountTimer.Stop();
 
-                    btnStart.IsEnabled = true;
-                    btnStop.IsEnabled = btnPause.IsEnabled = false;
-                    LoadingControl.IsLoading = false;
-                });
-            };
-            LoadingControl.IsLoading = true;
+            //        btnStart.IsEnabled = true;
+            //        btnStop.IsEnabled = btnPause.IsEnabled = false;
+            //        LoadingControl.IsLoading = false;
+            //    });
+            //};
+            //LoadingControl.IsLoading = true;
         }
 
         private async void ChbCamera_Click(object sender, RoutedEventArgs e)
         {
-            if (chbCamera.IsChecked.HasValue && chbCamera.IsChecked.Value)
-            {
-                if (mediaCapture == null)
-                {
-                    await StartPreviewAsync();
-                }
-                else
-                {
-                    await mediaCapture.StartPreviewAsync();
-                }
-            }
-            else
-            {
-                await mediaCapture.StopPreviewAsync();
-            }
+            //if (chbCamera.IsChecked.HasValue && chbCamera.IsChecked.Value)
+            //{
+            //    if (mediaCapture == null)
+            //    {
+            //        await StartPreviewAsync();
+            //    }
+            //    else
+            //    {
+            //        await mediaCapture.StartPreviewAsync();
+            //    }
+            //}
+            //else
+            //{
+            //    await mediaCapture.StopPreviewAsync();
+            //}
         }
 
         private async void ChbScreen_Click(object sender, RoutedEventArgs e)
         {
-            if(chbScreen.IsChecked.HasValue && chbScreen.IsChecked.Value)
-            {
-                await StartScreenCaptureAsync();
-            }
-            else
-            {
-                StopCapture();
-            }
+            //if(chbScreen.IsChecked.HasValue && chbScreen.IsChecked.Value)
+            //{
+            //    await StartScreenCaptureAsync();
+            //}
+            //else
+            //{
+            //    StopCapture();
+            //}
         }
 
         protected override async void OnNavigatingFrom(NavigatingCancelEventArgs e)
         {
-            StopCapture();
-            if (mediaCapture != null)
-            {
-                await mediaCapture?.StopPreviewAsync();
-            }
-            base.OnNavigatingFrom(e);
+            //StopCapture();
+            //if (mediaCapture != null)
+            //{
+            //    await mediaCapture?.StopPreviewAsync();
+            //}
+            //base.OnNavigatingFrom(e);
         }
 
         private async void BtnPause_Click(object sender, RoutedEventArgs e)
@@ -504,8 +508,7 @@ namespace PresentVideoRecorder.ContentPages
             {
                 // Application now has read/write access to all contents in the picked folder
                 // (including other sub-folder contents)
-                Windows.Storage.AccessCache.StorageApplicationPermissions.
-                FutureAccessList.AddOrReplace("PickedFolderToken", folder);
+                Windows.Storage.AccessCache.StorageApplicationPermissions.FutureAccessList.AddOrReplace("PickedFolderToken", folder);
                 this.txtSavePath.Text = folder.Path;
                 _videoSaveFolder = folder;
             }

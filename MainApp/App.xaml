@@ -2,6 +2,12 @@
     x:Class="PresentVideoRecorder.App"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:helpers="using:PresentVideoRecorder.Helpers"
     >
-
+    <Application.Resources>
+        <ResourceDictionary>
+            <helpers:LocalizedStrings x:Key="Localized"/>
+            <helpers:ViewModelLocator x:Key="VmLocator"/>
+        </ResourceDictionary>
+    </Application.Resources>
 </Application>

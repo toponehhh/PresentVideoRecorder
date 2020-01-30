@@ -5,7 +5,7 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d"
-    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}" RequestedTheme="Dark">
+    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
 
     <NavigationView x:Name="nvSample" PaneTitle="功能选项" Loaded="NvSample_Loaded" ItemInvoked="NvSample_ItemInvoked">
         <NavigationView.MenuItems>
@@ -22,7 +22,7 @@
                         <GradientStop Color="#FFEBEEE6" Offset="1"/>
                     </LinearGradientBrush>
                 </Border.Background>
-                <TextBlock Text="中山医院在线学习视频录制系统" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="46" FontWeight="Bold">
+                <TextBlock Text="{Binding Path=[AppDisplayName], Source={StaticResource Localized}}" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="46" FontWeight="Bold">
                     <TextBlock.Foreground>
                         <AcrylicBrush TintColor="#CC193051" FallbackColor="#FF011E6C" AlwaysUseFallback="False"/>
                     </TextBlock.Foreground>

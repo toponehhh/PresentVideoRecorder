@@ -1,0 +1,52 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<xliff version="1.2" xmlns="urn:oasis:names:tc:xliff:document:1.2" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:oasis:names:tc:xliff:document:1.2 xliff-core-1.2-transitional.xsd">
+  <file datatype="xml" source-language="zh-Hans" target-language="qps-ploc" original="MYUWP/STRINGS/ZH-HANS/RESOURCES.RESW" tool-id="MultilingualAppToolkit" product-name="n/a" product-version="n/a" build-num="n/a">
+    <header>
+      <tool tool-id="MultilingualAppToolkit" tool-name="Multilingual App Toolkit" tool-version="4.0.6915.0" tool-company="Microsoft" />
+    </header>
+    <body>
+      <group id="MYUWP/STRINGS/ZH-HANS/RESOURCES.RESW" datatype="resx">
+        <trans-unit id="AppDescription" translate="yes" xml:space="preserve">
+          <source>中山医院在线视频录制系统可以帮助你快速录制、编辑、转码和发布你的课程。</source>
+          <target state="new">中山医院在线视频录制系统可以帮助你快速录制、编辑、转码和发布你的课程。</target>
+        </trans-unit>
+        <trans-unit id="AppDisplayName" translate="yes" xml:space="preserve">
+          <source>中山医院在线学习课程视频录制系统</source>
+          <target state="new">中山医院在线学习课程视频录制系统</target>
+        </trans-unit>
+        <trans-unit id="CourseSaveName_WC" translate="yes" xml:space="preserve">
+          <source>课程名称：</source>
+          <target state="new">课程名称：</target>
+        </trans-unit>
+        <trans-unit id="CourseSavePath_WC" translate="yes" xml:space="preserve">
+          <source>课程存放路径：</source>
+          <target state="new">课程存放路径：</target>
+        </trans-unit>
+        <trans-unit id="CourseNeedAudio_WC" translate="yes" xml:space="preserve">
+          <source>录制课程声音：</source>
+          <target state="new">录制课程声音：</target>
+        </trans-unit>
+        <trans-unit id="CourseNeedCameraVideo_WC" translate="yes" xml:space="preserve">
+          <source>录制摄像机视频：</source>
+          <target state="new">录制摄像机视频：</target>
+        </trans-unit>
+        <trans-unit id="CourseNeedScreenVideo_WC" translate="yes" xml:space="preserve">
+          <source>录制屏幕视频：</source>
+          <target state="new">录制屏幕视频：</target>
+        </trans-unit>
+        <trans-unit id="ChooseScreenVideoSource" translate="yes" xml:space="preserve">
+          <source>选择屏幕录像来源</source>
+          <target state="new">选择屏幕录像来源</target>
+        </trans-unit>
+        <trans-unit id="No" translate="yes" xml:space="preserve">
+          <source>否</source>
+          <target state="new">否</target>
+        </trans-unit>
+        <trans-unit id="Yes" translate="yes" xml:space="preserve">
+          <source>是</source>
+          <target state="new">是</target>
+        </trans-unit>
+      </group>
+    </body>
+  </file>
+</xliff>
