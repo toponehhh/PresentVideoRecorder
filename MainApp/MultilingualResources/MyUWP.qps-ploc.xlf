@@ -23,8 +23,8 @@
           <target state="new">课程存放路径：</target>
         </trans-unit>
         <trans-unit id="CourseNeedAudio_WC" translate="yes" xml:space="preserve">
-          <source>录制课程声音：</source>
-          <target state="new">录制课程声音：</target>
+          <source>选择录音设备：</source>
+          <target state="new">选择录音设备：</target>
         </trans-unit>
         <trans-unit id="CourseNeedCameraVideo_WC" translate="yes" xml:space="preserve">
           <source>录制摄像机视频：</source>
@@ -45,6 +45,42 @@
         <trans-unit id="Yes" translate="yes" xml:space="preserve">
           <source>是</source>
           <target state="new">是</target>
+        </trans-unit>
+        <trans-unit id="MediaCaptureRecordLimitationExceeded" translate="yes" xml:space="preserve">
+          <source>录制设备的工作时间已到达系统规定的最大时间限制，录制已被终止。</source>
+          <target state="new">录制设备的工作时间已到达系统规定的最大时间限制，录制已被终止。</target>
+        </trans-unit>
+        <trans-unit id="Warning" translate="yes" xml:space="preserve">
+          <source>警告</source>
+          <target state="new">警告</target>
+        </trans-unit>
+        <trans-unit id="Pause" translate="yes" xml:space="preserve">
+          <source>暂停</source>
+          <target state="new">暂停</target>
+        </trans-unit>
+        <trans-unit id="Resume" translate="yes" xml:space="preserve">
+          <source>继续</source>
+          <target state="new">继续</target>
+        </trans-unit>
+        <trans-unit id="SetMute" translate="yes" xml:space="preserve">
+          <source>设置静音</source>
+          <target state="new">设置静音</target>
+        </trans-unit>
+        <trans-unit id="SetUnMute" translate="yes" xml:space="preserve">
+          <source>解除静音</source>
+          <target state="new">解除静音</target>
+        </trans-unit>
+        <trans-unit id="StartRecord" translate="yes" xml:space="preserve">
+          <source>开始录像</source>
+          <target state="new">开始录像</target>
+        </trans-unit>
+        <trans-unit id="StopRecord" translate="yes" xml:space="preserve">
+          <source>停止录像</source>
+          <target state="new">停止录像</target>
+        </trans-unit>
+        <trans-unit id="RenewRecord" translate="yes" xml:space="preserve">
+          <source>录新课程</source>
+          <target state="new">录新课程</target>
         </trans-unit>
       </group>
     </body>

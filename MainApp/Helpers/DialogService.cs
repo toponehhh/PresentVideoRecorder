@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.Toolkit.Uwp.Helpers;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -13,31 +14,37 @@ namespace PresentVideoRecorder.Helpers
     {
         public async Task<bool> ShowConfirmMessage(string title, string messageContent)
         {
-            var msgDialog = createNewMessageDialog(title, messageContent);
-            if (msgDialog != null)
+            return await DispatcherHelper.ExecuteOnUIThreadAsync(async () =>
             {
-                msgDialog.Commands.Add(new UICommand(LocalizedStrings.GetResourceString("Yes")) { Id = 0 });
-                msgDialog.Commands.Add(new UICommand(LocalizedStrings.GetResourceString("No")) { Id = 1 });
-
-                msgDialog.DefaultCommandIndex = msgDialog.CancelCommandIndex = 1;
-
-                var result = await msgDialog.ShowAsync();
-                int resultId = -1;
-                if (int.TryParse(result.Id.ToString(), out resultId))
+                var msgDialog = createNewMessageDialog(title, messageContent);
+                if (msgDialog != null)
                 {
-                    return resultId == 0 ? true : false;
+                    msgDialog.Commands.Add(new UICommand(LocalizedStrings.GetResourceString("Yes")) { Id = 0 });
+                    msgDialog.Commands.Add(new UICommand(LocalizedStrings.GetResourceString("No")) { Id = 1 });
+
+                    msgDialog.DefaultCommandIndex = msgDialog.CancelCommandIndex = 1;
+
+                    var result = await msgDialog.ShowAsync();
+                    int resultId = -1;
+                    if (int.TryParse(result.Id.ToString(), out resultId))
+                    {
+                        return resultId == 0 ? true : false;
+                    }
                 }
-            }
-            return false;
+                return false;
+            });
         }
 
         public async void ShowInformationMessage(string title, string messageContent)
         {
-            var msgDialog = createNewMessageDialog(title, messageContent);
-            if (msgDialog != null)
+            await DispatcherHelper.ExecuteOnUIThreadAsync(async () =>
             {
-                await msgDialog.ShowAsync();
-            }
+                var msgDialog = createNewMessageDialog(title, messageContent);
+                if (msgDialog != null)
+                {
+                    await msgDialog.ShowAsync();
+                }
+            });
         }
 
         public async Task<GraphicsCaptureItem> ShowGraphicsCapturePicker()

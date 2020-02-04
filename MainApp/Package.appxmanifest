@@ -11,15 +11,15 @@
 
 
   <Identity
-    Name="ZsyyVideoRecorder"
-    Publisher="CN=Donald_Zsyy"
-    Version="1.0.0.0" />
+    Name="51394DonaldHuang.25278BAA161A6"
+    Publisher="CN=A96927A6-5367-45E4-BE34-72DC08D43FA1"
+    Version="1.0.4.0" />
 
-  <mp:PhoneIdentity PhoneProductId="d3b2accc-a6db-47b3-a0e5-50fc95baeaac" PhonePublisherId="00000000-0000-0000-0000-000000000000"/>
+  <mp:PhoneIdentity PhoneProductId="eb5334e4-d04e-42af-abba-0d05705915a0" PhonePublisherId="00000000-0000-0000-0000-000000000000"/>
 
   <Properties>
-    <DisplayName>ZsyyPresentVideoRecorder</DisplayName>
-    <PublisherDisplayName>Donald</PublisherDisplayName>
+    <DisplayName>ms-resource:AppDisplayName</DisplayName>
+    <PublisherDisplayName>Donald Huang</PublisherDisplayName>
     <Logo>Assets\StoreLogo.png</Logo>
   </Properties>
 
@@ -41,12 +41,9 @@
         Square44x44Logo="Assets\Square44x44Logo.png"
         Description="ms-resource:AppDescription"
         BackgroundColor="transparent">
-        <uap:DefaultTile Wide310x150Logo="Assets\Wide310x150Logo.png"/>
-        <uap:SplashScreen Image="Assets\SplashScreen.png" />
+        <uap:DefaultTile Wide310x150Logo="Assets\Wide310x150Logo.png" Square71x71Logo="Assets\SmallTile.png" Square310x310Logo="Assets\LargeTile.png"/>
+        <uap:SplashScreen Image="Assets\SplashScreen.png" BackgroundColor="white"/>
       </uap:VisualElements>
-      <Extensions>
-        <uap:Extension Category="windows.cameraSettings"/>
-      </Extensions>
     </Application>
   </Applications>
 

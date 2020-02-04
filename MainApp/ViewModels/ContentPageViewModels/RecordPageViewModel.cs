@@ -3,11 +3,15 @@ using Microsoft.Toolkit.Uwp.Helpers;
 using PresentVideoRecorder.Helpers;
 using PresentVideoRecorder.Models;
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using Windows.Devices.Enumeration;
 using Windows.Graphics.Capture;
 using Windows.Media.Capture;
+using Windows.Media.Capture.Frames;
+using Windows.Media.MediaProperties;
+using Windows.Storage;
 using Windows.System.Display;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
@@ -16,31 +20,51 @@ namespace PresentVideoRecorder.ViewModels.ContentPageViewModels
 {
     public class RecordPageViewModel : UwpContentPageViewModel<Course>
     {
+        private const string SCREEN_VIDEO_FILE_NAME = "ScreenCaptureVideo.mp4";
+        private const string CAMERA_VIDEO_FILE_NAME = "CameraCaptureVideo.mp4";
+        private const string AUDIO_CAPTURE_FILE_NAME = "AudioCaptureVideo.mp3";
+
         private RelayCommand _startRecordCommand;
-        private RelayCommand _checkAudioCaptureDevicesCommand;
+        private RelayCommand _stopRecordCommand;
         private RelayCommand _checkVideoCaptureDevicesCommand;
         private RelayCommand<object> _videoCaptureDeviceSelectedCommand;
+        private RelayCommand<object> _audioCaptureDeviceSelectedCommand;
         private RelayCommand _screenCaptureAreaSelectCommand;
+        private RelayCommand _pickCourseSaveFolderCommand;
+        private RelayCommand _createNewRecordCommand;
+        private RelayCommand<bool> _muteRecordControlCommand;
 
         // MediaCapture and its state variables
         private ScreenCapture _screenCapture;
-        private MediaCapture _mediaCapture;
-        private bool _isInitialized;
-        private bool _isPreviewing;
-        private bool _isRecording;
-        
+        private MediaCapture _videoMediaCapture;
+        private MediaCapture _audioMediaCapture;
+
+        private bool _isVideoCaptureInitialized;
+        private bool _isAudioCaptureInitialized;
+        private bool _isCameraPreviewing;
+        private bool _isScreenPreviewing;
+        private bool _isVideoCaptureRecording;
+        private bool _isAudioCaptureRecording;
+        private bool _isScreenCaptureRecording;
+
         private readonly DisplayRequest _displayRequest = new DisplayRequest();
 
         public CaptureElement _cameraPreviewControl;
 
         public RecordPageViewModel(UwpPageViewModel parentPage, IDialogService dialogService) : base(parentPage, dialogService)
         {
-            _isRecording = false;
-            _startRecordCommand = new RelayCommand(StartRecordCourse, CanAllowRecordStart);
-            _checkAudioCaptureDevicesCommand = new RelayCommand(GetAudioProfileSupportedDevicesAsync);
-            _checkVideoCaptureDevicesCommand = new RelayCommand(GetVideoProfileSupportedDevicesAsync);
-            _videoCaptureDeviceSelectedCommand = new RelayCommand<object>(showCameraPreview);
-            _screenCaptureAreaSelectCommand = new RelayCommand(selectScreenCaptureArea, () => _needRecordScreenVideo);
+            _startRecordCommand = new RelayCommand(async () => await StartRecordCourse(), CanAllowRecordStart);
+            _stopRecordCommand = new RelayCommand(async () => await StopRecordCourse(), () => IsRecording);
+            _checkVideoCaptureDevicesCommand = new RelayCommand(getVideoProfileSupportedDevicesAsync, () => !_isVideoCaptureRecording);
+            _videoCaptureDeviceSelectedCommand = new RelayCommand<object>(showCameraPreview, (obj) => !_isVideoCaptureRecording);
+            _audioCaptureDeviceSelectedCommand = new RelayCommand<object>(showAudioPreview, (obj) => !_isAudioCaptureRecording);
+            _screenCaptureAreaSelectCommand = new RelayCommand(async () => await selectScreenCaptureArea(), () => _needRecordScreenVideo);
+            _pickCourseSaveFolderCommand = new RelayCommand(showCourseSaveFolderPicker, () => !IsRecording);
+            _createNewRecordCommand = new RelayCommand(async () => await createNewRecord());
+            _muteRecordControlCommand = new RelayCommand<bool>(switchMuteOrUnmute, (m) => _isAudioCaptureRecording);
+
+            //PauseOrResumeStatusText = LocalizedStrings.GetResourceString("Pause");
+            MuteStatusText = LocalizedStrings.GetResourceString("SetMute");
         }
 
         public void InitCaptureDeviceWithUIControl(CaptureElement cameraPreviewControl, UIElement screenPreviewControl)
@@ -48,7 +72,7 @@ namespace PresentVideoRecorder.ViewModels.ContentPageViewModels
             _cameraPreviewControl = cameraPreviewControl;
             _screenCapture = new ScreenCapture(screenPreviewControl);
         }
-        
+
 
         private string _courseName;
         public string CourseName
@@ -78,20 +102,6 @@ namespace PresentVideoRecorder.ViewModels.ContentPageViewModels
             }
         }
 
-        private bool _needRecordAudio;
-        public bool NeedRecordAudio 
-        { 
-            get
-            {
-                return _needRecordAudio;
-            }
-            set
-            {
-                Set(ref _needRecordAudio, value);
-                _startRecordCommand.RaiseCanExecuteChanged();
-            }
-        }
-
         private bool _needRecordCameraVideo;
         public bool NeedRecordCameraVideo
         {
@@ -103,15 +113,14 @@ namespace PresentVideoRecorder.ViewModels.ContentPageViewModels
             {
                 Set(ref _needRecordCameraVideo, value);
                 _startRecordCommand.RaiseCanExecuteChanged();
-                if (!value)
-                {
-                    if (_isPreviewing)
-                    {
-                        StopCameraPreviewAsync().Wait(TimeSpan.FromSeconds(5));
-                    }
-                    VideoCaptureDevices = null;
-                    SelectedCameraDevice = null;
-                }
+            }
+        }
+
+        private async void switchOffVideoCaptureDevice()
+        {
+            if (!NeedRecordCameraVideo)
+            {
+                await cleanupCamera();
             }
         }
 
@@ -128,9 +137,10 @@ namespace PresentVideoRecorder.ViewModels.ContentPageViewModels
                 _startRecordCommand.RaiseCanExecuteChanged();
                 _screenCaptureAreaSelectCommand.RaiseCanExecuteChanged();
 
-                if (!value)
+                if (!value && _isScreenPreviewing)
                 {
                     _screenCapture.StopScreenCapturePreview();
+                    _isScreenPreviewing = false;
                 }
             }
         }
@@ -161,42 +171,51 @@ namespace PresentVideoRecorder.ViewModels.ContentPageViewModels
             }
         }
 
-        private DeviceInformation _selectedCameraDevice;
-        public DeviceInformation SelectedCameraDevice 
-        { 
+        private string _pauseOrResumeStatusText;
+        public string PauseOrResumeStatusText
+        {
             get
             {
-                return _selectedCameraDevice;
+                return _pauseOrResumeStatusText;
             }
             set
             {
-                if (NeedRecordCameraVideo)
-                {
-                    var _preCameraDevice = _selectedCameraDevice;
-                    _selectedCameraDevice = value;
-                    if (_selectedCameraDevice == null)
-                    {
-                        StopCameraPreviewAsync().Wait(TimeSpan.FromSeconds(5));
-                    }
-                    else
-                    {
-                        if (_preCameraDevice != null && _preCameraDevice.Id != _selectedCameraDevice.Id)
-                        {
-                            StopCameraPreviewAsync().Wait(TimeSpan.FromSeconds(5));
-                        }
-                        if (!_isPreviewing)
-                        {
-                            showCameraPreview(_selectedCameraDevice);
-                        }
-                    }
-                }
-                else
-                {
-                    _selectedCameraDevice = null;
-                }
+                Set(ref _pauseOrResumeStatusText, value);
             }
         }
 
+        private string _muteStatusText;
+        public string MuteStatusText
+        {
+            get
+            {
+                return _muteStatusText;
+            }
+            set
+            {
+                Set(ref _muteStatusText, value);
+            }
+        }
+
+        public DeviceInformation SelectedCameraDevice
+        {
+            get;
+            private set;
+        }
+
+        public DeviceInformation SelectedAudioDevice
+        {
+            get;
+            private set;
+        }
+
+        public bool IsRecording
+        {
+            get
+            {
+                return _isAudioCaptureRecording || _isScreenCaptureRecording || _isScreenCaptureRecording;
+            }
+        }
 
         public ICommand StartRecordCommand
         {
@@ -206,11 +225,11 @@ namespace PresentVideoRecorder.ViewModels.ContentPageViewModels
             }
         }
 
-        public ICommand CheckAudioCaptureDevicesCommand
+        public ICommand StopRecordCommand
         {
             get
             {
-                return _checkAudioCaptureDevicesCommand;
+                return _stopRecordCommand;
             }
         }
 
@@ -230,6 +249,14 @@ namespace PresentVideoRecorder.ViewModels.ContentPageViewModels
             }
         }
 
+        public ICommand AudioCaptureDeviceSelectedCommand
+        {
+            get
+            {
+                return _audioCaptureDeviceSelectedCommand;
+            }
+        }
+
         public ICommand ScreenCaptureAreaSelectCommand
         {
             get
@@ -238,16 +265,61 @@ namespace PresentVideoRecorder.ViewModels.ContentPageViewModels
             }
         }
 
+        public ICommand PickCourseSaveFolderCommand
+        {
+            get
+            {
+                return _pickCourseSaveFolderCommand;
+            }
+        }
+
+        public ICommand CreateNewRecordCommand
+        {
+            get
+            {
+                return _createNewRecordCommand;
+            }
+        }
+
+        public ICommand MuteRecordControlCommand
+        {
+            get
+            {
+                return _muteRecordControlCommand;
+            }
+        }
+
         private async void showCameraPreview(object selectedVideoDevice)
         {
-            if (selectedVideoDevice != null)
+            if (selectedVideoDevice != null && NeedRecordCameraVideo)
             {
                 var videoCaptureDevice = selectedVideoDevice as DeviceInformation;
-                await InitializeCameraAsync(videoCaptureDevice);
-                if (_isInitialized)
+                var preCameraDevice = SelectedCameraDevice;
+                SelectedCameraDevice = videoCaptureDevice;
+                if (videoCaptureDevice == null || (preCameraDevice != null && preCameraDevice.Id != videoCaptureDevice.Id))
+                {
+                    await cleanupCamera();
+                }
+                await initializeCameraAsync(videoCaptureDevice);
+                if (_isVideoCaptureInitialized)
                 {
                     await StartCameraPreviewAsync();
                 }
+            }
+        }
+
+        private async void showAudioPreview(object selectedAudioDevice)
+        {
+            if (selectedAudioDevice != null)
+            {
+                var audioCaptureDevice = selectedAudioDevice as DeviceInformation;
+                var preAudioDevice = SelectedCameraDevice;
+                SelectedAudioDevice = audioCaptureDevice;
+                if (audioCaptureDevice == null || (preAudioDevice != null && preAudioDevice.Id != audioCaptureDevice.Id))
+                {
+                    cleanupAudio();
+                }
+                await initializeAudioInputAsync(audioCaptureDevice);
             }
         }
 
@@ -257,19 +329,19 @@ namespace PresentVideoRecorder.ViewModels.ContentPageViewModels
             _displayRequest.RequestActive();
 
             // Set the preview source in the UI and mirror it if necessary
-            _cameraPreviewControl.Source = _mediaCapture;
+            _cameraPreviewControl.Source = _videoMediaCapture;
 
             // Start the preview
-            await _mediaCapture.StartPreviewAsync();
-            _isPreviewing = true;
+            await _videoMediaCapture.StartPreviewAsync();
+            _isCameraPreviewing = true;
         }
 
         private async Task StopCameraPreviewAsync()
         {
             // Stop the preview
-            if (_mediaCapture != null)
+            if (_videoMediaCapture != null)
             {
-                await _mediaCapture.StopPreviewAsync();
+                await _videoMediaCapture.StopPreviewAsync();
 
                 // Use the dispatcher because this method is sometimes called from non-UI threads
                 await DispatcherHelper.ExecuteOnUIThreadAsync(() =>
@@ -281,14 +353,55 @@ namespace PresentVideoRecorder.ViewModels.ContentPageViewModels
                     _displayRequest.RequestRelease();
                 });
             }
-            _isPreviewing = false;
+            _isCameraPreviewing = false;
         }
 
-        private async Task InitializeCameraAsync(DeviceInformation cameraDevice)
+        private async Task initializeAudioInputAsync(DeviceInformation audioDevice)
+        {
+            Logger.Instance.Info("InitializeAudioAsync Started!");
+
+            if (_audioMediaCapture == null)
+            {
+                // Attempt to get the back camera if one is available, but use any camera device if not
+                if (audioDevice == null)
+                {
+                    Logger.Instance.Warning("No audio input device found!");
+                    return;
+                }
+
+                if (!audioDevice.IsEnabled)
+                {
+                    Logger.Instance.Warning($"Selected device {audioDevice.Name} is not enabled!");
+                    return;
+                }
+
+                // Create MediaCapture and its settings
+                _audioMediaCapture = new MediaCapture();
+
+                // Register for a notification when something goes wrong
+                _audioMediaCapture.Failed += MediaCapture_Failed;
+                _audioMediaCapture.RecordLimitationExceeded += MediaCapture_RecordLimitationExceeded;
+
+                var settings = new MediaCaptureInitializationSettings { AudioDeviceId = audioDevice.Id, StreamingCaptureMode = StreamingCaptureMode.Audio };
+
+                // Initialize MediaCapture
+                try
+                {
+                    await _audioMediaCapture.InitializeAsync(settings);
+                    _isAudioCaptureInitialized = true;
+                }
+                catch (UnauthorizedAccessException)
+                {
+                    Logger.Instance.Error("The app was denied access to the audio device!");
+                }
+            }
+        }
+
+        private async Task initializeCameraAsync(DeviceInformation cameraDevice)
         {
             Logger.Instance.Info("InitializeCameraAsync Started!");
 
-            if (_mediaCapture == null)
+            if (_videoMediaCapture == null)
             {
                 // Attempt to get the back camera if one is available, but use any camera device if not
                 if (cameraDevice == null)
@@ -297,94 +410,293 @@ namespace PresentVideoRecorder.ViewModels.ContentPageViewModels
                     return;
                 }
 
+                if (!cameraDevice.IsEnabled)
+                {
+                    Logger.Instance.Warning($"Selected device {cameraDevice.Name} is not enabled!");
+                    return;
+                }
+
                 // Create MediaCapture and its settings
-                _mediaCapture = new MediaCapture();
+                _videoMediaCapture = new MediaCapture();
 
                 // Register for a notification when something goes wrong
-                _mediaCapture.Failed += MediaCapture_Failed;
+                _videoMediaCapture.Failed += MediaCapture_Failed;
+                _videoMediaCapture.RecordLimitationExceeded += MediaCapture_RecordLimitationExceeded;
 
-                var settings = new MediaCaptureInitializationSettings { VideoDeviceId = cameraDevice.Id };
+                var settings = new MediaCaptureInitializationSettings { VideoDeviceId = cameraDevice.Id, StreamingCaptureMode = StreamingCaptureMode.Video };
 
                 // Initialize MediaCapture
                 try
                 {
-                    await _mediaCapture.InitializeAsync(settings);
-                    _isInitialized = true;
+                    await _videoMediaCapture.InitializeAsync(settings);
+                    _isVideoCaptureInitialized = true;
                 }
                 catch (UnauthorizedAccessException)
                 {
-                    Logger.Instance.Error("The app was denied access to the camera");
+                    Logger.Instance.Error("The app was denied access to the camera!");
                 }
             }
         }
 
-        private void MediaCapture_Failed(MediaCapture sender, MediaCaptureFailedEventArgs errorEventArgs)
+        private async void MediaCapture_Failed(MediaCapture sender, MediaCaptureFailedEventArgs errorEventArgs)
         {
             Logger.Instance.Error(string.Format("MediaCapture_Failed: (0x{0:X}) {1}", errorEventArgs.Code, errorEventArgs.Message));
-
-            CleanupCamera();
+            if (sender.MediaCaptureSettings.StreamingCaptureMode == StreamingCaptureMode.Audio)
+            {
+                cleanupAudio();
+            }
+            else
+            {
+                await cleanupCamera();
+            }
         }
 
-        private void CleanupCamera()
+        private async void MediaCapture_RecordLimitationExceeded(MediaCapture sender)
+        {
+            // This is a notification that recording has to stop, and the app is expected to finalize the recording
+
+            //await StopRecordingAsync();
+            await _dialogService.ShowConfirmMessage(LocalizedStrings.GetResourceString("Warning"), LocalizedStrings.GetResourceString("MediaCaptureRecordLimitationExceeded"));
+        }
+
+        private void cleanupAudio()
+        {
+            Logger.Instance.Info("CleanupAudioAsync started!");
+
+            if (_isAudioCaptureInitialized)
+            {
+                _isAudioCaptureInitialized = false;
+            }
+
+            if (_audioMediaCapture != null)
+            {
+                _audioMediaCapture.Failed -= MediaCapture_Failed;
+                _audioMediaCapture.RecordLimitationExceeded -= MediaCapture_RecordLimitationExceeded;
+                _audioMediaCapture.Dispose();
+                _audioMediaCapture = null;
+            }
+
+            //SelectedAudioDevice = null;
+
+            Logger.Instance.Info("CleanupAudioAsync end!");
+        }
+
+        private async Task cleanupCamera()
         {
             Logger.Instance.Info("CleanupCameraAsync started!");
 
-            if (_isInitialized)
+            if (_isVideoCaptureInitialized)
             {
-                if (_isPreviewing)
+                if (_isCameraPreviewing)
                 {
                     // The call to stop the preview is included here for completeness, but can be
                     // safely removed if a call to MediaCapture.Dispose() is being made later,
                     // as the preview will be automatically stopped at that point
-                    StopCameraPreviewAsync().Wait(TimeSpan.FromSeconds(5));
+                    await StopCameraPreviewAsync();
                 }
 
-                _isInitialized = false;
+                _isVideoCaptureInitialized = false;
             }
 
-            if (_mediaCapture != null)
+            if (_videoMediaCapture != null)
             {
-                _mediaCapture.Failed -= MediaCapture_Failed;
-                _mediaCapture.Dispose();
-                _mediaCapture = null;
+                _videoMediaCapture.Failed -= MediaCapture_Failed;
+                _videoMediaCapture.RecordLimitationExceeded -= MediaCapture_RecordLimitationExceeded;
+                _videoMediaCapture.Dispose();
+                _videoMediaCapture = null;
             }
+
+            //SelectedCameraDevice = null;
 
             Logger.Instance.Info("CleanupCameraAsync end!");
         }
 
-        private async void selectScreenCaptureArea()
+        private async Task selectScreenCaptureArea()
         {
             var captureItem = await _dialogService.ShowGraphicsCapturePicker();
-            _screenCapture?.ShowScreenCapturePreviewAsync(captureItem);
-        }
-
-        private async void StartRecordCourse()
-        {
-            
-        }
-
-        public async void GetAudioProfileSupportedDevicesAsync()
-        {
-            if (NeedRecordAudio)
+            if (captureItem != null)
             {
-                AudioCaptureDevices = await DeviceInformation.FindAllAsync(DeviceClass.AudioCapture);
+                _screenCapture?.ShowScreenCapturePreviewAsync(captureItem);
+                _isScreenPreviewing = true;
+            }
+            else
+            {
+                NeedRecordScreenVideo = false;
             }
         }
 
-        public async void GetVideoProfileSupportedDevicesAsync()
+        private async Task StartRecordCourse()
+        {
+            var courseSaveParentFolder = await StorageFolder.GetFolderFromPathAsync(CourseSavePath);
+            var courseSaveFolder = await courseSaveParentFolder.CreateFolderAsync(CourseName, CreationCollisionOption.OpenIfExists);
+            if (innerData == null)
+            {
+                innerData = Course.CreateNewCourse(CourseName);
+                innerData.DataSaveDirectory = courseSaveFolder.Path;
+            }
+
+            //if (NeedRecordScreenVideo && !_isScreenPreviewing)
+            //{
+            //    selectScreenCaptureArea();
+            //}
+            var audioRecordTask = Task.Run(async () =>
+                                  {
+                                      if (_isAudioCaptureInitialized)
+                                      {
+                                          var audioCaptureFile = await courseSaveFolder.CreateFileAsync(AUDIO_CAPTURE_FILE_NAME, CreationCollisionOption.GenerateUniqueName);
+                                          innerData.AudioFiles.Add(audioCaptureFile.Path);
+                                          await _audioMediaCapture.StartRecordToStorageFileAsync(MediaEncodingProfile.CreateMp3(AudioEncodingQuality.Auto), audioCaptureFile);
+                                          _isAudioCaptureRecording = true;
+                                      }
+                                  });
+            var cameraRecordTask = Task.Run(async () =>
+                                  {
+                                      if (NeedRecordCameraVideo && _isVideoCaptureInitialized)
+                                      {
+                                          var videoCaptureFile = await courseSaveFolder.CreateFileAsync(CAMERA_VIDEO_FILE_NAME, CreationCollisionOption.GenerateUniqueName);
+                                          innerData.CameraVideoFiles.Add(videoCaptureFile.Path);
+                                          await _videoMediaCapture.StartRecordToStorageFileAsync(MediaEncodingProfile.CreateMp4(VideoEncodingQuality.Auto), videoCaptureFile);
+                                          _isVideoCaptureRecording = true;
+                                      }
+                                  });
+            var screenRecordTask = Task.Run(async () =>
+                                  {
+                                      if (NeedRecordScreenVideo)
+                                      {
+                                          var screenCaptureFile = await courseSaveFolder.CreateFileAsync(SCREEN_VIDEO_FILE_NAME, CreationCollisionOption.GenerateUniqueName);
+                                          innerData.ScreenVideoFiles.Add(screenCaptureFile.Path);
+                                          _isScreenCaptureRecording = true;
+                                          _screenCapture.StartScreenRecordAsync(screenCaptureFile);
+                                      }
+                                  });
+            await Task.WhenAll(audioRecordTask, cameraRecordTask, screenRecordTask);
+
+            _startRecordCommand.RaiseCanExecuteChanged();
+            _stopRecordCommand.RaiseCanExecuteChanged();
+            _muteRecordControlCommand.RaiseCanExecuteChanged();
+        }
+
+        public async Task StopRecordCourse()
+        {
+            var audioRecordTask = Task.Run(async () =>
+                                  {
+                                      if (_isAudioCaptureRecording)
+                                      {
+                                          await _audioMediaCapture.StopRecordAsync();
+                                          _isAudioCaptureRecording = false;
+                                      }
+                                  });
+            var cameraRecordTask = Task.Run(async () =>
+                                  {
+                                      if (_isVideoCaptureRecording)
+                                      {
+                                          await _videoMediaCapture.StopRecordAsync();
+                                          _isVideoCaptureRecording = false;
+                                      }
+                                  });
+            var screenRecordTask = Task.Run(() =>
+                                  {
+                                      if (_isScreenCaptureRecording)
+                                      {
+                                          _screenCapture.StopScreenRecord();
+                                          _isScreenCaptureRecording = false;
+                                      }
+                                  });
+
+            await Task.WhenAll(audioRecordTask, cameraRecordTask, screenRecordTask);
+            await innerData.SaveToStorageFileAsync();
+
+            _startRecordCommand.RaiseCanExecuteChanged();
+            _stopRecordCommand.RaiseCanExecuteChanged();
+            _muteRecordControlCommand.RaiseCanExecuteChanged();
+            
+        }
+
+        public async Task GetAudioProfileSupportedDevicesAsync()
+        {
+            AudioCaptureDevices = await DeviceInformation.FindAllAsync(DeviceClass.AudioCapture);
+        }
+
+        private async void getVideoProfileSupportedDevicesAsync()
         {
             if (NeedRecordCameraVideo)
             {
                 VideoCaptureDevices = await DeviceInformation.FindAllAsync(DeviceClass.VideoCapture);
             }
+            else
+            {
+                switchOffVideoCaptureDevice();
+                VideoCaptureDevices = null;
+            }
         }
 
         private bool CanAllowRecordStart()
         {
-            return !_isRecording 
-                    && !string.IsNullOrEmpty(CourseName) 
+            var reslt = !_isVideoCaptureRecording
+                    && !_isAudioCaptureRecording
+                    && !_isScreenCaptureRecording
+                    && !string.IsNullOrEmpty(CourseName)
                     && !string.IsNullOrEmpty(CourseSavePath)
-                    && (NeedRecordAudio || NeedRecordCameraVideo || NeedRecordScreenVideo);
+                    && (SelectedAudioDevice != null || (NeedRecordCameraVideo && SelectedCameraDevice != null) || NeedRecordScreenVideo);
+            return reslt;
+        }
+
+        private async void showCourseSaveFolderPicker()
+        {
+            var folderPicker = new Windows.Storage.Pickers.FolderPicker();
+            folderPicker.SuggestedStartLocation = Windows.Storage.Pickers.PickerLocationId.VideosLibrary;
+            folderPicker.FileTypeFilter.Add("*");
+
+            StorageFolder saveFolder = await folderPicker.PickSingleFolderAsync();
+            if (saveFolder != null)
+            {
+                // Application now has read/write access to all contents in the picked folder
+                // (including other sub-folder contents)
+                Windows.Storage.AccessCache.StorageApplicationPermissions.FutureAccessList.AddOrReplace("PickedFolderToken", saveFolder);
+                CourseSavePath = saveFolder.Path;
+            }
+            else
+            {
+                CourseSavePath = string.Empty;
+            }
+        }
+
+        public async Task Reset()
+        {
+            if (IsRecording)
+            {
+                await StopRecordCourse();
+            }
+
+            if(_isScreenPreviewing)
+            {
+                _screenCapture.StopScreenCapturePreview();
+            }
+
+            cleanupAudio();
+            AudioCaptureDevices = null;
+            await GetAudioProfileSupportedDevicesAsync();
+            await cleanupCamera();
+            VideoCaptureDevices = null;
+            innerData = null;
+            CourseName = string.Empty;
+            CourseSavePath = string.Empty;
+            NeedRecordCameraVideo = false;
+            NeedRecordScreenVideo = false;
+        }
+        
+        private async Task createNewRecord()
+        {
+            await Reset();
+        }
+
+        private void switchMuteOrUnmute(bool needMute)
+        {
+            if (_isAudioCaptureRecording)
+            {
+                _audioMediaCapture.AudioDeviceController.Muted = needMute;
+                MuteStatusText = needMute ? LocalizedStrings.GetResourceString("SetUnMute") : LocalizedStrings.GetResourceString("SetMute");
+            }
         }
     }
 }

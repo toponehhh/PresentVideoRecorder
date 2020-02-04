@@ -127,7 +127,7 @@
     <value>选择屏幕录像来源</value>
   </data>
   <data name="CourseNeedAudio_WC" xml:space="preserve">
-    <value>录制课程声音：</value>
+    <value>选择录音设备：</value>
   </data>
   <data name="CourseNeedCameraVideo_WC" xml:space="preserve">
     <value>录制摄像机视频：</value>
@@ -141,8 +141,35 @@
   <data name="CourseSavePath_WC" xml:space="preserve">
     <value>课程存放路径：</value>
   </data>
+  <data name="MediaCaptureRecordLimitationExceeded" xml:space="preserve">
+    <value>录制设备的工作时间已到达系统规定的最大时间限制，录制已被终止。</value>
+  </data>
   <data name="No" xml:space="preserve">
     <value>否</value>
+  </data>
+  <data name="Pause" xml:space="preserve">
+    <value>暂停</value>
+  </data>
+  <data name="RenewRecord" xml:space="preserve">
+    <value>录新课程</value>
+  </data>
+  <data name="Resume" xml:space="preserve">
+    <value>继续</value>
+  </data>
+  <data name="SetMute" xml:space="preserve">
+    <value>设置静音</value>
+  </data>
+  <data name="SetUnMute" xml:space="preserve">
+    <value>解除静音</value>
+  </data>
+  <data name="StartRecord" xml:space="preserve">
+    <value>开始录像</value>
+  </data>
+  <data name="StopRecord" xml:space="preserve">
+    <value>停止录像</value>
+  </data>
+  <data name="Warning" xml:space="preserve">
+    <value>警告</value>
   </data>
   <data name="Yes" xml:space="preserve">
     <value>是</value>

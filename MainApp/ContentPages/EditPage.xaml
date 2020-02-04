@@ -34,13 +34,13 @@
         
         <TextBlock Text="摄像机视频" Grid.Row="1" Grid.Column="0" HorizontalAlignment="Center" VerticalAlignment="Center" ></TextBlock>
         <TextBlock Text="桌面视频" Grid.Row="1" Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Center"></TextBlock>
+
         <MediaElement x:Name="cameraVideoPlayer" Grid.Row="2" Grid.Column="0" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Stretch="Fill" Margin="20,0"
                       AreTransportControlsEnabled="True"/>
         <MediaElement x:Name="desktopVideoPlayer" Grid.Row="2" Grid.Column="1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Stretch="Fill" Margin="20,0"
                       AreTransportControlsEnabled="True"
                       />
-        <!--<Image Source="/Assets/wb070323054.jpg" Grid.Row="2" Grid.Column="0" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Stretch="Fill" Margin="20,0"></Image>-->
-        <!--<Image Source="/Assets/thET3NKEB5.jpg" Grid.Row="2" Grid.Column="1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Stretch="Fill" Margin="20,0"></Image>-->
+        
         <Grid Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="2">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="120"></ColumnDefinition>

@@ -9,7 +9,7 @@
     xmlns:core="using:Microsoft.Xaml.Interactions.Core"
     mc:Ignorable="d"
     DataContext="{Binding Source={StaticResource VmLocator}, Path=RecordPageVm}"
-    x:Name="pgRecordPage">
+    >
 
     <Grid HorizontalAlignment="Stretch"  VerticalAlignment="Stretch" Margin="24">
         <Grid.ColumnDefinitions>
@@ -30,7 +30,7 @@
                 <ColumnDefinition Width="*"></ColumnDefinition>
             </Grid.ColumnDefinitions>
             <TextBlock Text="{Binding Path=[CourseSaveName_WC], Source={StaticResource Localized}}" VerticalAlignment="Center" Grid.Column="0"/>
-            <TextBox Grid.Column="1" VerticalAlignment="Center" VerticalContentAlignment="Center" HorizontalAlignment="Stretch" Margin="5" Text="{Binding CourseName, Mode=TwoWay}"/>
+            <TextBox Grid.Column="1" VerticalAlignment="Center" VerticalContentAlignment="Center" HorizontalAlignment="Stretch" Margin="5" Text="{Binding CourseName, Mode=TwoWay}" IsEnabled="{Binding IsRecording, Converter={StaticResource BoolNegationConverter}}"/>
         </Grid>
 
         <Grid Grid.Row="0" Grid.Column="1" Margin="20,0,0,0">
@@ -40,8 +40,8 @@
                 <ColumnDefinition Width="50"></ColumnDefinition>
             </Grid.ColumnDefinitions>
             <TextBlock Text="{Binding Path=[CourseSavePath_WC],Source={StaticResource Localized}}" VerticalAlignment="Center" Grid.Column="0"/>
-            <TextBox x:Name="txtSavePath" VerticalAlignment="Center" VerticalContentAlignment="Center" HorizontalAlignment="Stretch" Grid.Column="1" Margin="5,5,10,5" Text="{Binding CourseSavePath, Mode=TwoWay}"/>
-            <Button x:Name="btnSavePath"  HorizontalAlignment="Stretch" Grid.Column="2" Content="..." Click="btnSavePath_Click" Margin="5,0"/>
+            <TextBox x:Name="txtSavePath" VerticalAlignment="Center" VerticalContentAlignment="Center" HorizontalAlignment="Stretch" Grid.Column="1" Margin="5,5,10,5" Text="{Binding CourseSavePath, Mode=TwoWay}" IsEnabled="{Binding IsRecording, Converter={StaticResource BoolNegationConverter}}"/>
+            <Button x:Name="btnSavePath"  HorizontalAlignment="Stretch" Grid.Column="2" Content="..." Margin="5,0" Command="{Binding PickCourseSaveFolderCommand}"/>
         </Grid>
 
         <Grid Grid.Row="1" Grid.Column="0">
@@ -49,8 +49,14 @@
                 <ColumnDefinition Width="140"></ColumnDefinition>
                 <ColumnDefinition Width="*"></ColumnDefinition>
             </Grid.ColumnDefinitions>
-            <CheckBox x:Name="chbNeedAudio" VerticalAlignment="Center" Grid.Column="0" Content="{Binding Path=[CourseNeedAudio_WC], Source={StaticResource Localized}}" IsChecked="{Binding NeedRecordAudio, Mode=TwoWay}" Command="{Binding CheckAudioCaptureDevicesCommand}"/>
-            <ComboBox Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Stretch" Margin="5" IsEnabled="{Binding NeedRecordAudio}" ItemsSource="{Binding AudioCaptureDevices}" DisplayMemberPath="Name" SelectedValuePath="Id"/>
+            <TextBlock VerticalAlignment="Center" Grid.Column="0" Text="{Binding Path=[CourseNeedAudio_WC], Source={StaticResource Localized}}" />
+            <ComboBox x:Name="cbAudioCaptureDevices" Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Stretch" Margin="5" ItemsSource="{Binding AudioCaptureDevices}" DisplayMemberPath="Name" SelectedValuePath="Id" IsEnabled="{Binding IsRecording, Converter={StaticResource BoolNegationConverter}}">
+                <i:Interaction.Behaviors>
+                    <core:EventTriggerBehavior EventName="SelectionChanged">
+                        <core:InvokeCommandAction Command="{Binding AudioCaptureDeviceSelectedCommand}" CommandParameter="{x:Bind cbAudioCaptureDevices.SelectedItem,Mode=TwoWay}"></core:InvokeCommandAction>
+                    </core:EventTriggerBehavior>
+                </i:Interaction.Behaviors>
+            </ComboBox>
         </Grid>
         
         <Grid Grid.Row="2" Grid.Column="0">
@@ -59,12 +65,12 @@
                 <ColumnDefinition Width="*"></ColumnDefinition>
             </Grid.ColumnDefinitions>
             <CheckBox x:Name="chbNeedCameraVideo" Content="{Binding Path=[CourseNeedCameraVideo_WC],Source={StaticResource Localized}}" VerticalAlignment="Center" IsChecked="{Binding NeedRecordCameraVideo, Mode=TwoWay}" Command="{Binding CheckVideoCaptureDevicesCommand}"/>
-            <ComboBox Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Stretch" Margin="5" IsEnabled="{Binding NeedRecordCameraVideo}" ItemsSource="{Binding VideoCaptureDevices}" DisplayMemberPath="Name" SelectedValuePath="Id" SelectedItem="{Binding DataContext.SelectedCameraDevice, ElementName=pgRecordPage, Mode=TwoWay}">
-                <!--<i:Interaction.Behaviors>
+            <ComboBox x:Name="cbVideoCaptureDevices" Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Stretch" Margin="5" IsEnabled="{Binding NeedRecordCameraVideo}" ItemsSource="{Binding VideoCaptureDevices}" DisplayMemberPath="Name" SelectedValuePath="Id">
+                <i:Interaction.Behaviors>
                     <core:EventTriggerBehavior EventName="SelectionChanged">
                         <core:InvokeCommandAction Command="{Binding VideoCaptureDeviceSelectedCommand}" CommandParameter="{x:Bind cbVideoCaptureDevices.SelectedItem,Mode=TwoWay}"></core:InvokeCommandAction>
                     </core:EventTriggerBehavior>
-                </i:Interaction.Behaviors>-->
+                </i:Interaction.Behaviors>
             </ComboBox>
         </Grid>
 
@@ -73,7 +79,7 @@
                 <ColumnDefinition Width="140"></ColumnDefinition>
                 <ColumnDefinition Width="*"></ColumnDefinition>
             </Grid.ColumnDefinitions>
-            <CheckBox x:Name="chbNeedScreenVideo" Content="{Binding Path=[CourseNeedScreenVideo_WC],Source={StaticResource Localized}}" VerticalAlignment="Center" IsChecked="{Binding NeedRecordScreenVideo, Mode=TwoWay}" />
+            <CheckBox x:Name="chbNeedScreenVideo" Content="{Binding Path=[CourseNeedScreenVideo_WC],Source={StaticResource Localized}}" VerticalAlignment="Center" IsChecked="{Binding NeedRecordScreenVideo, Mode=TwoWay}" IsEnabled="{Binding IsRecording, Converter={StaticResource BoolNegationConverter}}"/>
             <Button Grid.Column="1" Content="{Binding Path=[ChooseScreenVideoSource],Source={StaticResource Localized}}" VerticalAlignment="Center" HorizontalAlignment="Stretch" Margin="5" Command="{Binding ScreenCaptureAreaSelectCommand}"/>
         </Grid>
 
@@ -95,23 +101,12 @@
                             <ColumnDefinition Width="*"></ColumnDefinition>
                         </Grid.ColumnDefinitions>
                         <SymbolIcon Symbol ="Video" Grid.Column="0" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"></SymbolIcon>
-                        <TextBlock Text="开始" Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Center"></TextBlock>
+                        <TextBlock Text="{Binding Path=[StartRecord], Source={StaticResource Localized}}" Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Center"></TextBlock>
                     </Grid>
                 </Button.Content>
             </Button>
-            <Button Grid.Column="1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="24" x:Name="btnPause" Click="BtnPause_Click" IsEnabled="False">
-                <Button.Content>
-                    <Grid HorizontalAlignment="Stretch">
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="36"></ColumnDefinition>
-                            <ColumnDefinition Width="*"></ColumnDefinition>
-                        </Grid.ColumnDefinitions>
-                        <SymbolIcon Symbol="Pause"  Grid.Column="0" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"></SymbolIcon>
-                        <TextBlock Text="暂停" Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Center" x:Name="tbPauseContent"></TextBlock>
-                    </Grid>
-                </Button.Content>
-            </Button>
-            <Button Grid.Column="2" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="24" x:Name="btnStop" Click="BtnStop_Click" IsEnabled="False">
+            
+            <Button Grid.Column="1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="24" x:Name="btnStop" Command="{Binding StopRecordCommand}">
                 <Button.Content>
                     <Grid HorizontalAlignment="Stretch">
                         <Grid.ColumnDefinitions>
@@ -119,24 +114,36 @@
                             <ColumnDefinition Width="*"></ColumnDefinition>
                         </Grid.ColumnDefinitions>
                         <SymbolIcon Symbol="Stop"  Grid.Column="0" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"></SymbolIcon>
-                        <TextBlock Text="终止" Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Center"></TextBlock>
+                        <TextBlock Text="{Binding Path=[StopRecord], Source={StaticResource Localized}}" Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Center"></TextBlock>
                     </Grid>
                 </Button.Content>
             </Button>
-            <Button Grid.Column="3" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="24" x:Name="btnMute" Click="BtnMute_Click">
-                <Button.Content>
+            <ToggleButton Grid.Column="2" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="24" x:Name="btnMute" Command="{Binding MuteRecordControlCommand}" CommandParameter="{Binding IsChecked,ElementName=btnMute, Mode=TwoWay}">
+                <ToggleButton.Content>
                     <Grid HorizontalAlignment="Stretch">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="36"></ColumnDefinition>
                             <ColumnDefinition Width="*"></ColumnDefinition>
                         </Grid.ColumnDefinitions>
                         <SymbolIcon Symbol="Mute"  Grid.Column="0" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"></SymbolIcon>
-                        <TextBlock Text="静音" Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Center" x:Name="tbMuteContent"></TextBlock>
+                        <TextBlock Text="{Binding MuteStatusText, Mode=TwoWay}" Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Center" x:Name="tbMuteContent"></TextBlock>
+                    </Grid>
+                </ToggleButton.Content>
+            </ToggleButton>
+            <Button Grid.Column="3" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="24" Command="{Binding CreateNewRecordCommand}">
+                <Button.Content>
+                    <Grid HorizontalAlignment="Stretch">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="36"></ColumnDefinition>
+                            <ColumnDefinition Width="*"></ColumnDefinition>
+                        </Grid.ColumnDefinitions>
+                        <SymbolIcon Symbol="Refresh"  Grid.Column="0" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"></SymbolIcon>
+                        <TextBlock Text="{Binding [RenewRecord],Source={StaticResource Localized}}" Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Center"></TextBlock>
                     </Grid>
                 </Button.Content>
             </Button>
         </Grid>
-        <controls:Loading x:Name="LoadingControl" Grid.ColumnSpan="2" Grid.RowSpan="6" IsLoading="False">
+        <!--<controls:Loading x:Name="LoadingControl" Grid.ColumnSpan="2" Grid.RowSpan="6" IsLoading="False">
             <controls:Loading.Background>
                 <SolidColorBrush Color="Black" Opacity="0.7" />
             </controls:Loading.Background>
@@ -144,6 +151,6 @@
                 <ProgressRing IsActive="True" Foreground="Blue" />
                 <TextBlock Text="请耐心等待系统生成课程录像 :)" Foreground="White" VerticalAlignment="Center"  FontSize="24"/>
             </StackPanel>
-        </controls:Loading>
+        </controls:Loading>-->
     </Grid>
 </Page>

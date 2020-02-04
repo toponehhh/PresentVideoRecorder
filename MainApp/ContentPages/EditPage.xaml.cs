@@ -1,4 +1,5 @@
 ﻿using Microsoft.Toolkit.Uwp.UI.Controls;
+using PresentVideoRecorder.Models;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -38,8 +39,8 @@ namespace PresentVideoRecorder.ContentPages
 
         private void ButtonPlay_Click(object sender, RoutedEventArgs e)
         {
-            PreviewAsync(desktopMediaComposition, desktopVideoFile, desktopVideoPlayer);
-            PreviewAsync(cameraMediaComposition, cameraVideoFile, cameraVideoPlayer);
+            //PreviewAsync(desktopMediaComposition, desktopVideoFile, desktopVideoPlayer);
+            //PreviewAsync(cameraMediaComposition, cameraVideoFile, cameraVideoPlayer);
         }
 
         private void ButtonStop_Click(object sender, RoutedEventArgs e)
@@ -81,8 +82,9 @@ namespace PresentVideoRecorder.ContentPages
             {
                 Windows.Storage.AccessCache.StorageApplicationPermissions.FutureAccessList.AddOrReplace("PickedFolderToken", pickedFolder);
                 txtVideoPath.Text = pickedFolder.Path;
-                cameraVideoFile = await pickedFolder.GetFileAsync("CameraVideo.mp4");
-                desktopVideoFile = await pickedFolder.GetFileAsync("DesktopCaptureVideo.mp4");
+
+                var courseFile=await pickedFolder.GetFileAsync("Course.json");
+                var courseData = await Course.LoadFromFile(courseFile.Path);
             }
         }
 

@@ -1,12 +1,19 @@
-﻿using Microsoft.Graphics.Canvas;
+﻿using CaptureEncoder;
+using Microsoft.Graphics.Canvas;
 using Microsoft.Graphics.Canvas.UI.Composition;
+using Microsoft.Toolkit.Uwp.Helpers;
 using System;
+using System.IO;
 using System.Numerics;
+using System.Runtime.Serialization;
 using System.Threading.Tasks;
 using Windows.Foundation;
 using Windows.Graphics;
 using Windows.Graphics.Capture;
 using Windows.Graphics.DirectX;
+using Windows.Graphics.DirectX.Direct3D11;
+using Windows.Media.MediaProperties;
+using Windows.Storage;
 using Windows.UI;
 using Windows.UI.Composition;
 using Windows.UI.Xaml;
@@ -25,6 +32,9 @@ namespace PresentVideoRecorder.Helpers
         private GraphicsCaptureItem _item;
         private Direct3D11CaptureFramePool _framePool;
         private GraphicsCaptureSession _session;
+
+        private IDirect3DDevice _device;
+        private Encoder _encoder;
 
         public ScreenCapture(UIElement shower)
         {
@@ -50,6 +60,30 @@ namespace PresentVideoRecorder.Helpers
             brush.Stretch = CompositionStretch.Uniform;
             visual.Brush = brush;
             ElementCompositionPreview.SetElementChildVisual(graphicShower, visual);
+        }
+
+        private async Task initScreenCapturePreviewAreaAsync(UIElement graphicShower)
+        {
+            await graphicShower.Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.High, () =>
+            {
+                _canvasDevice = new CanvasDevice();
+                _compositionGraphicsDevice = CanvasComposition.CreateCompositionGraphicsDevice(Window.Current.Compositor, _canvasDevice);
+                _compositor = Window.Current.Compositor;
+
+                _surface = _compositionGraphicsDevice.CreateDrawingSurface(
+                    new Size(640, 480),
+                    DirectXPixelFormat.B8G8R8A8UIntNormalized,
+                    DirectXAlphaMode.Premultiplied);    // This is the only value that currently works with the composition APIs.
+
+                var visual = _compositor.CreateSpriteVisual();
+                visual.RelativeSizeAdjustment = Vector2.One;
+                var brush = _compositor.CreateSurfaceBrush(_surface);
+                brush.HorizontalAlignmentRatio = 0.5f;
+                brush.VerticalAlignmentRatio = 0.5f;
+                brush.Stretch = CompositionStretch.Uniform;
+                visual.Brush = brush;
+                ElementCompositionPreview.SetElementChildVisual(graphicShower, visual);
+            });
         }
 
         private void startCaptureInternal()
@@ -158,6 +192,18 @@ namespace PresentVideoRecorder.Helpers
             } while (_canvasDevice == null);
         }
 
+        private uint ensureEven(uint number)
+        {
+            if (number % 2 == 0)
+            {
+                return number;
+            }
+            else
+            {
+                return number + 1;
+            }
+        }
+
         public void StopScreenCapturePreview()
         {
             using (var session = CanvasComposition.CreateDrawingSession(_surface))
@@ -179,6 +225,53 @@ namespace PresentVideoRecorder.Helpers
                 // We'll define this method later in the document.
                 startCaptureInternal();
             }
+        }
+
+        public void StopScreenRecord()
+        {
+            _encoder?.Dispose();
+        }
+
+        public async void StartScreenRecordAsync(StorageFile recordFile)
+        {
+            var frameRate = 30u;
+            var quality = VideoEncodingQuality.HD1080p;
+
+            var tempProfile = MediaEncodingProfile.CreateMp4(quality);
+            var bitrate = tempProfile.Video.Bitrate;
+
+            // Use the capture item's size for the encoding if desired
+
+            var width = ensureEven((uint)_item.Size.Width);
+            var height = ensureEven((uint)_item.Size.Height);
+
+            // Kick off the encoding
+            try
+            {
+                _device = Direct3D11Helpers.CreateDevice();
+                //GraphicsCaptureItem _encoderItem = _item;
+                using (var stream = await recordFile.OpenAsync(FileAccessMode.ReadWrite))
+                using (_encoder = new Encoder(_device, _item))
+                {
+                    await _encoder.EncodeAsync(stream, width, height, bitrate, frameRate);
+                }
+            }
+            catch (Exception ex)
+            {
+                Logger.Instance.Error($"Error happened in ScreenCapture.RecordScreenCaptureAsync with exception {ex}");
+            }
+        }
+
+        private GraphicsCaptureItem cloneGraphicsCaptureItem(GraphicsCaptureItem source)
+        {
+            DataContractSerializer dcSer = new DataContractSerializer(source.GetType());
+            MemoryStream memoryStream = new MemoryStream();
+
+            dcSer.WriteObject(memoryStream, source);
+            memoryStream.Position = 0;
+
+            var newObject = (GraphicsCaptureItem)dcSer.ReadObject(memoryStream);
+            return newObject;
         }
     }
 }
