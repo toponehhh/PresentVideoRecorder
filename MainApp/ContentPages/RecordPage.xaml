@@ -58,7 +58,16 @@
                 </i:Interaction.Behaviors>
             </ComboBox>
         </Grid>
-        
+
+        <Grid Grid.Row="1" Grid.Column="1" Margin="20,0,0,0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="140"></ColumnDefinition>
+                <ColumnDefinition Width="*"></ColumnDefinition>
+            </Grid.ColumnDefinitions>
+            <TextBlock VerticalAlignment="Center" Grid.Column="0" Text="录制时长：" />
+            <TextBlock Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Stretch" Margin="5" Text="{Binding CourseTotalRecordTime}" />
+        </Grid>
+
         <Grid Grid.Row="2" Grid.Column="0">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="140"></ColumnDefinition>

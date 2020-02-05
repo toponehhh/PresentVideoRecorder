@@ -15,8 +15,8 @@ namespace PresentVideoRecorder.Models
 {
     public class Course : ModelBase
     {
-        private string SAVE_FILE_NAME = "Course.json";
-        public string Name { get; private set; }
+        public const string SAVE_FILE_NAME = "Course.json";
+        public string Name { get; set; }
 
         public string DataSaveDirectory { get; set; }
         public List<string> AudioFiles { get; set; }
@@ -52,12 +52,7 @@ namespace PresentVideoRecorder.Models
                     var courseMetaFile = await courseFolder.CreateFileAsync(SAVE_FILE_NAME, CreationCollisionOption.ReplaceExisting);
                     using (var fs = await courseMetaFile.OpenStreamForWriteAsync())
                     {
-                        JsonSerializerOptions serializerOptions = new JsonSerializerOptions();
-#if DEBUG
-                        serializerOptions.WriteIndented = true;
-#else
-                        serializerOptions.WriteIndented = false;
-#endif
+                        JsonSerializerOptions serializerOptions = createSerializerOptions();
                         await JsonSerializer.SerializeAsync(fs, this, serializerOptions);
                     }
                     saveResult = true;
@@ -79,13 +74,14 @@ namespace PresentVideoRecorder.Models
                 var courseDataFile = await StorageFile.GetFileFromPathAsync(dataFileFullPath);
                 using (var fs = await courseDataFile.OpenStreamForReadAsync())
                 {
-                    loadResult = await JsonSerializer.DeserializeAsync<Course>(fs);
+                    JsonSerializerOptions serializerOptions = createSerializerOptions();
+                    loadResult = await JsonSerializer.DeserializeAsync<Course>(fs, serializerOptions);
                 }
             }
             return loadResult;
         }
 
-        private JsonSerializerOptions createSerializerOptions()
+        private static JsonSerializerOptions createSerializerOptions()
         {
             JsonSerializerOptions serializerOptions = new JsonSerializerOptions();
             serializerOptions.PropertyNamingPolicy = JsonNamingPolicy.CamelCase;

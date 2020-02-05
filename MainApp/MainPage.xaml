@@ -10,8 +10,8 @@
     <NavigationView x:Name="nvSample" PaneTitle="功能选项" Loaded="NvSample_Loaded" ItemInvoked="NvSample_ItemInvoked">
         <NavigationView.MenuItems>
             <NavigationViewItem Content="课程录制" Tag="RecordPage" Icon="Video" />
-            <NavigationViewItem Content="视频编辑" Icon="Save" Tag="EditPage" />
-            <NavigationViewItem Content="视频转码" Icon="Refresh" Tag="TransCodePage" />
+            <NavigationViewItem Content="课程编辑" Icon="Edit" Tag="EditPage" />
+            <NavigationViewItem Content="视频转码" Icon="MoveToFolder" Tag="TransCodePage" />
             <NavigationViewItem Content="课程发布" Icon="Upload" Tag="PublishPage" />
         </NavigationView.MenuItems>
         <NavigationView.Header>

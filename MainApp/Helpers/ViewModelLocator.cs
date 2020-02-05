@@ -21,9 +21,11 @@ namespace PresentVideoRecorder.Helpers
             SimpleIoc.Default.Register<UwpPageViewModel, MainPageViewModel>();
             //SimpleIoc.Default.Register<RecordPageViewModel>(()=> { return new RecordPageViewModel(SimpleIoc.Default.GetInstance<MainPageViewModel>()); });
             SimpleIoc.Default.Register<RecordPageViewModel>();
+            SimpleIoc.Default.Register<EditPageViewModel>();
         }
 
         public RecordPageViewModel RecordPageVm => SimpleIoc.Default.GetInstance<RecordPageViewModel>();
+        public EditPageViewModel EditPageVM => SimpleIoc.Default.GetInstance<EditPageViewModel>();
         
     }
 }

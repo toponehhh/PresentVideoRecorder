@@ -11,8 +11,8 @@
           <target state="new">中山医院在线视频录制系统可以帮助你快速录制、编辑、转码和发布你的课程。</target>
         </trans-unit>
         <trans-unit id="AppDisplayName" translate="yes" xml:space="preserve">
-          <source>中山医院在线学习课程视频录制系统</source>
-          <target state="new">中山医院在线学习课程视频录制系统</target>
+          <source>中山医院在线学习课程录制系统</source>
+          <target state="new">中山医院在线学习课程录制系统</target>
         </trans-unit>
         <trans-unit id="CourseSaveName_WC" translate="yes" xml:space="preserve">
           <source>课程名称：</source>

@@ -121,7 +121,7 @@
     <value>中山医院在线视频录制系统可以帮助你快速录制、编辑、转码和发布你的课程。</value>
   </data>
   <data name="AppDisplayName" xml:space="preserve">
-    <value>中山医院在线学习课程视频录制系统</value>
+    <value>中山医院在线学习课程录制系统</value>
   </data>
   <data name="ChooseScreenVideoSource" xml:space="preserve">
     <value>选择屏幕录像来源</value>

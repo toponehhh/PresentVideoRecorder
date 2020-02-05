@@ -3,13 +3,11 @@ using Microsoft.Toolkit.Uwp.Helpers;
 using PresentVideoRecorder.Helpers;
 using PresentVideoRecorder.Models;
 using System;
-using System.Collections.Generic;
+using System.Diagnostics;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using Windows.Devices.Enumeration;
-using Windows.Graphics.Capture;
 using Windows.Media.Capture;
-using Windows.Media.Capture.Frames;
 using Windows.Media.MediaProperties;
 using Windows.Storage;
 using Windows.System.Display;
@@ -47,6 +45,9 @@ namespace PresentVideoRecorder.ViewModels.ContentPageViewModels
         private bool _isAudioCaptureRecording;
         private bool _isScreenCaptureRecording;
 
+        private Stopwatch _recordStopWatch;
+        private DispatcherTimer _recordTimer;
+
         private readonly DisplayRequest _displayRequest = new DisplayRequest();
 
         public CaptureElement _cameraPreviewControl;
@@ -63,8 +64,21 @@ namespace PresentVideoRecorder.ViewModels.ContentPageViewModels
             _createNewRecordCommand = new RelayCommand(async () => await createNewRecord());
             _muteRecordControlCommand = new RelayCommand<bool>(switchMuteOrUnmute, (m) => _isAudioCaptureRecording);
 
-            //PauseOrResumeStatusText = LocalizedStrings.GetResourceString("Pause");
+            _recordStopWatch = new Stopwatch();
+            _recordTimer = new DispatcherTimer();
+            _recordTimer.Interval = TimeSpan.FromSeconds(1);
+            _recordTimer.Tick += _recordTimer_Tick;
+            
             MuteStatusText = LocalizedStrings.GetResourceString("SetMute");
+            CourseTotalRecordTime = TimeSpan.Zero.ToString(@"hh\:mm\:ss");
+        }
+
+        private void _recordTimer_Tick(object sender, object e)
+        {
+            if (_recordStopWatch.IsRunning)
+            {
+                CourseTotalRecordTime = _recordStopWatch.Elapsed.ToString(@"hh\:mm\:ss");
+            }
         }
 
         public void InitCaptureDeviceWithUIControl(CaptureElement cameraPreviewControl, UIElement screenPreviewControl)
@@ -113,6 +127,19 @@ namespace PresentVideoRecorder.ViewModels.ContentPageViewModels
             {
                 Set(ref _needRecordCameraVideo, value);
                 _startRecordCommand.RaiseCanExecuteChanged();
+            }
+        }
+
+        private string _courseTotalRecordTime;
+        public string CourseTotalRecordTime
+        {
+            get
+            {
+                return _courseTotalRecordTime;
+            }
+            set
+            {
+                Set(ref _courseTotalRecordTime, value);
             }
         }
 
@@ -571,6 +598,8 @@ namespace PresentVideoRecorder.ViewModels.ContentPageViewModels
                                   });
             await Task.WhenAll(audioRecordTask, cameraRecordTask, screenRecordTask);
 
+            _recordTimer.Start();
+            _recordStopWatch.Start();
             _startRecordCommand.RaiseCanExecuteChanged();
             _stopRecordCommand.RaiseCanExecuteChanged();
             _muteRecordControlCommand.RaiseCanExecuteChanged();
@@ -604,6 +633,10 @@ namespace PresentVideoRecorder.ViewModels.ContentPageViewModels
                                   });
 
             await Task.WhenAll(audioRecordTask, cameraRecordTask, screenRecordTask);
+            
+            _recordStopWatch.Stop();
+            _recordTimer.Stop();
+
             await innerData.SaveToStorageFileAsync();
 
             _startRecordCommand.RaiseCanExecuteChanged();
@@ -683,6 +716,8 @@ namespace PresentVideoRecorder.ViewModels.ContentPageViewModels
             CourseSavePath = string.Empty;
             NeedRecordCameraVideo = false;
             NeedRecordScreenVideo = false;
+            _recordStopWatch.Reset();
+            CourseTotalRecordTime = TimeSpan.Zero.ToString(@"hh\:mm\:ss");
         }
         
         private async Task createNewRecord()

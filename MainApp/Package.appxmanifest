@@ -13,7 +13,7 @@
   <Identity
     Name="51394DonaldHuang.25278BAA161A6"
     Publisher="CN=A96927A6-5367-45E4-BE34-72DC08D43FA1"
-    Version="1.0.4.0" />
+    Version="1.0.21.0" />
 
   <mp:PhoneIdentity PhoneProductId="eb5334e4-d04e-42af-abba-0d05705915a0" PhonePublisherId="00000000-0000-0000-0000-000000000000"/>
 
@@ -43,6 +43,8 @@
         BackgroundColor="transparent">
         <uap:DefaultTile Wide310x150Logo="Assets\Wide310x150Logo.png" Square71x71Logo="Assets\SmallTile.png" Square310x310Logo="Assets\LargeTile.png"/>
         <uap:SplashScreen Image="Assets\SplashScreen.png" BackgroundColor="white"/>
+        <uap:InitialRotationPreference>
+          <uap:Rotation Preference="landscape"/></uap:InitialRotationPreference>
       </uap:VisualElements>
     </Application>
   </Applications>
@@ -56,7 +58,6 @@
     <uap3:Capability Name="backgroundMediaPlayback"/>
     <uap:Capability Name="removableStorage"/>
     <uap:Capability Name="musicLibrary"/>
-    <uap:Capability Name="userAccountInformation"/>
     <DeviceCapability Name="microphone"/>
     <DeviceCapability Name="webcam"/>
   </Capabilities>

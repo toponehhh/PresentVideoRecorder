@@ -6,7 +6,9 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:controls="using:Microsoft.Toolkit.Uwp.UI.Controls"
     mc:Ignorable="d"
-    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
+    DataContext="{Binding Source={StaticResource VmLocator}, Path=EditPageVM}"
+    >
 
     <Grid HorizontalAlignment="Stretch"  VerticalAlignment="Stretch" Margin="24">
         <Grid.ColumnDefinitions>
@@ -16,32 +18,46 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="50"></RowDefinition>
             <RowDefinition Height="50"></RowDefinition>
+            <RowDefinition Height="50"></RowDefinition>
             <RowDefinition Height="*"></RowDefinition>
+            <RowDefinition Height="50"></RowDefinition>
             <RowDefinition Height="50"></RowDefinition>
             <RowDefinition Height="100"></RowDefinition>
         </Grid.RowDefinitions>
-        <Grid Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2">
+        <Grid Grid.Row="0" Grid.Column="0">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="120"></ColumnDefinition>
                 <ColumnDefinition Width="*"></ColumnDefinition>
                 <ColumnDefinition Width="50"></ColumnDefinition>
             </Grid.ColumnDefinitions>
-            <TextBlock Text="课程路径：" VerticalAlignment="Center" Grid.Column="0"></TextBlock>
-            <TextBox x:Name="txtVideoPath" Height="35" VerticalAlignment="Center" HorizontalAlignment="Stretch" Grid.Column="1" Margin="0,0,20,0"></TextBox>
-            <Button x:Name="buttonPickButton" Height="35" HorizontalAlignment="Stretch" Grid.Column="2" Content="..."
-                    Click="ButtonPickButton_Click"></Button>
+            <TextBlock Text="{Binding [CourseSavePath_WC],Source={StaticResource Localized}}" VerticalAlignment="Center" Grid.Column="0"/>
+            <TextBox Height="35" VerticalAlignment="Center" HorizontalAlignment="Stretch" Grid.Column="1" Margin="0,0,10,0" IsReadOnly="True" Text="{Binding CourseSavePath}"/>
+            <Button x:Name="buttonPickButton" Height="35" HorizontalAlignment="Stretch" Grid.Column="2" Content="..." Margin="0,0,20,0" Command="{Binding LoadCourseCommand}"/>
         </Grid>
-        
-        <TextBlock Text="摄像机视频" Grid.Row="1" Grid.Column="0" HorizontalAlignment="Center" VerticalAlignment="Center" ></TextBlock>
-        <TextBlock Text="桌面视频" Grid.Row="1" Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Center"></TextBlock>
 
-        <MediaElement x:Name="cameraVideoPlayer" Grid.Row="2" Grid.Column="0" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Stretch="Fill" Margin="20,0"
-                      AreTransportControlsEnabled="True"/>
-        <MediaElement x:Name="desktopVideoPlayer" Grid.Row="2" Grid.Column="1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Stretch="Fill" Margin="20,0"
-                      AreTransportControlsEnabled="True"
-                      />
+        <Grid Grid.Row="0" Grid.Column="1" >
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="120"></ColumnDefinition>
+                <ColumnDefinition Width="*"></ColumnDefinition>
+            </Grid.ColumnDefinitions>
+            <TextBlock Text="{Binding [CourseSaveName_WC],Source={StaticResource Localized}}" VerticalAlignment="Center" Grid.Column="0"/>
+            <TextBox Height="35" VerticalAlignment="Center" HorizontalAlignment="Stretch" Grid.Column="1" Margin="0,0,20,0" IsReadOnly="True" Text="{Binding CourseName}"/>
+        </Grid>
+        <Grid Grid.Row="2" Grid.Column="0">
+            <TextBlock Text="摄像机视频"  HorizontalAlignment="Left" VerticalAlignment="Center" />
+            <Button x:Name="btnSetCameraVideoFull" Content="全屏播放" HorizontalAlignment="Center" VerticalAlignment="Center" Click="btnSetCameraVideoFull_Click"/>
+        </Grid>
+        <Grid Grid.Row="2" Grid.Column="1">
+            <TextBlock Text="屏幕视频" HorizontalAlignment="Left" VerticalAlignment="Center"/>
+            <Button x:Name="btnSetScreenVideoFull" Content="全屏播放" HorizontalAlignment="Center" VerticalAlignment="Center" Click="btnSetScreenVideoFull_Click"/>
+        </Grid>
+
+        <MediaPlayerElement x:Name="cameraVideoPlayer" Grid.Row="3" Grid.Column="0" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Stretch="Fill" Margin="20,0"
+                      AreTransportControlsEnabled="False" />
+        <MediaPlayerElement x:Name="screenVideoPlayer" Grid.Row="3" Grid.Column="1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Stretch="Fill" Margin="20,0"
+                      AreTransportControlsEnabled="False" />
         
-        <Grid Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="2">
+        <!--<Grid Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="2">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="120"></ColumnDefinition>
                 <ColumnDefinition Width="*"></ColumnDefinition>
@@ -51,11 +67,20 @@
                                     StepFrequency="1" 
                                     Grid.Column="1" 
                                     HorizontalAlignment="Stretch" VerticalAlignment="Center" 
-                                    Margin="0,0,20,0" ValueChanged="DurationSelector_ValueChanged"
+                                    Margin="0,0,20,0"
                                     />
+        </Grid>-->
+
+        <Grid Grid.Row="5" Grid.Column="0" Grid.ColumnSpan="2">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="120"></ColumnDefinition>
+                <ColumnDefinition Width="*"></ColumnDefinition>
+            </Grid.ColumnDefinitions>
+            <TextBlock Text="时间进度：" VerticalAlignment="Center" Grid.Column="0"></TextBlock>
+            <Slider Grid.Column="1" HorizontalAlignment="Stretch" VerticalAlignment="Center" Margin="0,0,20,0" Maximum="{Binding CourseTotalSeconds}" Value="{Binding CurrentPlayProgress,Mode=TwoWay}" TickPlacement="Inline" TickFrequency="1"></Slider>
         </Grid>
-        
-        <Grid Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="2">
+
+        <Grid Grid.Row="6" Grid.Column="0" Grid.ColumnSpan="2">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*"></ColumnDefinition>
                 <ColumnDefinition Width="*"></ColumnDefinition>
@@ -65,8 +90,7 @@
                 <ColumnDefinition Width="*"></ColumnDefinition>
                 <ColumnDefinition Width="*"></ColumnDefinition>
             </Grid.ColumnDefinitions>
-            <Button x:Name="buttonPlay" Grid.Column="0" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="24"
-                    Click="ButtonPlay_Click">
+            <Button x:Name="buttonPlay" Grid.Column="0" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="24" Command="{Binding PlayCourseMediaCommand}">
                 <Button.Content>
                     <Grid HorizontalAlignment="Stretch">
                         <Grid.ColumnDefinitions>
@@ -78,8 +102,7 @@
                     </Grid>
                 </Button.Content>
             </Button>
-            <Button x:Name="buttonStop" Grid.Column="1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="24"
-                    Click="ButtonStop_Click">
+            <Button x:Name="buttonStop" Grid.Column="1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="24" Command="{Binding PauseOrResumeMediaCommand}">
                 <Button.Content>
                     <Grid HorizontalAlignment="Stretch">
                         <Grid.ColumnDefinitions>
@@ -87,11 +110,11 @@
                             <ColumnDefinition Width="*"></ColumnDefinition>
                         </Grid.ColumnDefinitions>
                         <SymbolIcon Symbol ="Stop" Grid.Column="0" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"></SymbolIcon>
-                        <TextBlock Text="停止" Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Center"></TextBlock>
+                        <TextBlock Text="{Binding PauseOrResumeStatusText}" Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Center"></TextBlock>
                     </Grid>
                 </Button.Content>
             </Button>
-            <Button x:Name="buttonBackward" Grid.Column="2" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="24">
+            <Button x:Name="buttonBackward" Grid.Column="2" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="24" Command="{Binding MoveBackwardMediaCommand}">
                 <Button.Content>
                     <Grid HorizontalAlignment="Stretch">
                         <Grid.ColumnDefinitions>
@@ -103,7 +126,7 @@
                     </Grid>
                 </Button.Content>
             </Button>
-            <Button x:Name="buttonForward" Grid.Column="3" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="24">
+            <Button x:Name="buttonForward" Grid.Column="3" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="24" Command="{Binding MoveForwardMediaCommand}">
                 <Button.Content>
                     <Grid HorizontalAlignment="Stretch">
                         <Grid.ColumnDefinitions>
@@ -115,7 +138,7 @@
                     </Grid>
                 </Button.Content>
             </Button>
-            <Button x:Name="buttonRemoveClip" Grid.Column="4" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="24">
+            <Button x:Name="buttonRemoveClip" Grid.Column="4" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="24" IsEnabled="False">
                 <Button.Content>
                     <Grid HorizontalAlignment="Stretch">
                         <Grid.ColumnDefinitions>
@@ -127,8 +150,7 @@
                     </Grid>
                 </Button.Content>
             </Button>
-            <Button x:Name="buttonReserveClip" Grid.Column="5" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="24"
-                    Click="ButtonReserveClip_Click">
+            <Button x:Name="buttonReserveClip" Grid.Column="5" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="24" IsEnabled="False">
                 <Button.Content>
                     <Grid HorizontalAlignment="Stretch">
                         <Grid.ColumnDefinitions>
@@ -140,7 +162,7 @@
                     </Grid>
                 </Button.Content>
             </Button>
-            <Button x:Name="buttonApply" Grid.Column="6" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="24">
+            <Button x:Name="buttonApply" Grid.Column="6" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="24" IsEnabled="False">
                 <Button.Content>
                     <Grid HorizontalAlignment="Stretch">
                         <Grid.ColumnDefinitions>
