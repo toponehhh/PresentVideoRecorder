@@ -141,6 +141,12 @@
   <data name="CourseSavePath_WC" xml:space="preserve">
     <value>课程存放路径：</value>
   </data>
+  <data name="DataFileSaveFailed" xml:space="preserve">
+    <value>数据文件保存失败</value>
+  </data>
+  <data name="Error" xml:space="preserve">
+    <value>错误</value>
+  </data>
   <data name="MediaCaptureRecordLimitationExceeded" xml:space="preserve">
     <value>录制设备的工作时间已到达系统规定的最大时间限制，录制已被终止。</value>
   </data>

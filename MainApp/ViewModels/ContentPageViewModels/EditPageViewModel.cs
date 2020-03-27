@@ -160,6 +160,7 @@ namespace PresentVideoRecorder.ViewModels.ContentPageViewModels
 
             if (pickedCourseFolder != null)
             {
+                Windows.Storage.AccessCache.StorageApplicationPermissions.FutureAccessList.AddOrReplace("PickedFolderToken", pickedCourseFolder);
                 var courseFile = await pickedCourseFolder.GetFileAsync(Course.SAVE_FILE_NAME);
                 innerData = await Course.LoadFromFile(courseFile.Path);
                 if (innerData != null)
@@ -222,7 +223,7 @@ namespace PresentVideoRecorder.ViewModels.ContentPageViewModels
         {
             if (CourseTotalSeconds > 0)
             {
-                DispatcherHelper.ExecuteOnUIThreadAsync(() => CurrentPlayProgress = sender.Position.TotalSeconds / CourseTotalSeconds);
+                DispatcherHelper.ExecuteOnUIThreadAsync(() => CurrentPlayProgress = sender.Position.TotalSeconds);
             }
         }
 
@@ -263,15 +264,15 @@ namespace PresentVideoRecorder.ViewModels.ContentPageViewModels
             var mediaComposition = await loadFilesIntoMediaComposition(videoMediaFiles, audioMediaFiles);
             if (mediaComposition?.Clips?.Count > 0)
             {
-                MediaStreamSource playerStreamSource;
-                if (previewWidth > 0 && previewHeight > 0)
-                {
-                    playerStreamSource = mediaComposition.GeneratePreviewMediaStreamSource(previewWidth, previewHeight);
-                }
-                else
-                {
-                    playerStreamSource = mediaComposition.GenerateMediaStreamSource();
-                }
+                MediaStreamSource playerStreamSource = mediaComposition.GenerateMediaStreamSource();
+                //if (previewWidth > 0 && previewHeight > 0)
+                //{
+                //    playerStreamSource = mediaComposition.GeneratePreviewMediaStreamSource(previewWidth, previewHeight);
+                //}
+                //else
+                //{
+                //    playerStreamSource = mediaComposition.GenerateMediaStreamSource();
+                //}
                 if (playerStreamSource != null)
                 {
                     player.Source = MediaSource.CreateFromMediaStreamSource(playerStreamSource);

@@ -52,9 +52,9 @@
             <Button x:Name="btnSetScreenVideoFull" Content="全屏播放" HorizontalAlignment="Center" VerticalAlignment="Center" Click="btnSetScreenVideoFull_Click"/>
         </Grid>
 
-        <MediaPlayerElement x:Name="cameraVideoPlayer" Grid.Row="3" Grid.Column="0" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Stretch="Fill" Margin="20,0"
+        <MediaPlayerElement x:Name="cameraVideoPlayer" Grid.Row="3" Grid.Column="0" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Stretch="Fill" Margin="5,0"
                       AreTransportControlsEnabled="False" />
-        <MediaPlayerElement x:Name="screenVideoPlayer" Grid.Row="3" Grid.Column="1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Stretch="Fill" Margin="20,0"
+        <MediaPlayerElement x:Name="screenVideoPlayer" Grid.Row="3" Grid.Column="1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Stretch="Fill" Margin="5,0"
                       AreTransportControlsEnabled="False" />
         
         <!--<Grid Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="2">
@@ -77,7 +77,7 @@
                 <ColumnDefinition Width="*"></ColumnDefinition>
             </Grid.ColumnDefinitions>
             <TextBlock Text="时间进度：" VerticalAlignment="Center" Grid.Column="0"></TextBlock>
-            <Slider Grid.Column="1" HorizontalAlignment="Stretch" VerticalAlignment="Center" Margin="0,0,20,0" Maximum="{Binding CourseTotalSeconds}" Value="{Binding CurrentPlayProgress,Mode=TwoWay}" TickPlacement="Inline" TickFrequency="1"></Slider>
+            <Slider Grid.Column="1" HorizontalAlignment="Stretch" VerticalAlignment="Center" Margin="0,0,20,0" Maximum="{Binding CourseTotalSeconds}" Value="{Binding CurrentPlayProgress,Mode=TwoWay}" TickFrequency="1" SnapsTo="Ticks" TickPlacement="Outside" SmallChange="1" LargeChange="5"></Slider>
         </Grid>
 
         <Grid Grid.Row="6" Grid.Column="0" Grid.ColumnSpan="2">

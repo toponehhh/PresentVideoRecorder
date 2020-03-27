@@ -637,11 +637,17 @@ namespace PresentVideoRecorder.ViewModels.ContentPageViewModels
             _recordStopWatch.Stop();
             _recordTimer.Stop();
 
-            await innerData.SaveToStorageFileAsync();
-
-            _startRecordCommand.RaiseCanExecuteChanged();
-            _stopRecordCommand.RaiseCanExecuteChanged();
-            _muteRecordControlCommand.RaiseCanExecuteChanged();
+            var dataSaved = await innerData.SaveToStorageFileAsync();
+            if (!dataSaved)
+            {
+                _dialogService.ShowInformationMessage(LocalizedStrings.GetResourceString("Error"), LocalizedStrings.GetResourceString("DataFileSaveFailed"));
+            }
+            else
+            {
+                _startRecordCommand.RaiseCanExecuteChanged();
+                _stopRecordCommand.RaiseCanExecuteChanged();
+                _muteRecordControlCommand.RaiseCanExecuteChanged();
+            }
             
         }
 

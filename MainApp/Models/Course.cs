@@ -59,6 +59,8 @@ namespace PresentVideoRecorder.Models
                 }
                 catch (Exception ex)
                 {
+                    //var dialog = new Windows.UI.Popups.MessageDialog(ex.ToString());
+                    //await dialog.ShowAsync();
                     Logger.Instance.Error($"Failed to save the course information into the folder {DataSaveDirectory}. The detail message is {ex}");
                     saveResult = false;
                 }

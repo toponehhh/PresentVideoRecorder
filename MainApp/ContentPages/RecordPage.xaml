@@ -92,8 +92,8 @@
             <Button Grid.Column="1" Content="{Binding Path=[ChooseScreenVideoSource],Source={StaticResource Localized}}" VerticalAlignment="Center" HorizontalAlignment="Stretch" Margin="5" Command="{Binding ScreenCaptureAreaSelectCommand}"/>
         </Grid>
 
-        <CaptureElement x:Name="PreviewControl" Stretch="Uniform" Grid.Row="3" Grid.Column="0" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="20,0"/>
-        <Border x:Name="ScreenPlayer" Grid.Row="3" Grid.Column="1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="20,0"></Border>
+        <CaptureElement x:Name="PreviewControl" Stretch="Uniform" Grid.Row="3" Grid.Column="0" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="20,0,0,0"/>
+        <Border x:Name="ScreenPlayer" Grid.Row="3" Grid.Column="1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="20,0,0,0"></Border>
         
         <Grid Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="2">
             <Grid.ColumnDefinitions>

@@ -82,6 +82,14 @@
           <source>录新课程</source>
           <target state="new">录新课程</target>
         </trans-unit>
+        <trans-unit id="DataFileSaveFailed" translate="yes" xml:space="preserve">
+          <source>数据文件保存失败</source>
+          <target state="new">数据文件保存失败</target>
+        </trans-unit>
+        <trans-unit id="Error" translate="yes" xml:space="preserve">
+          <source>错误</source>
+          <target state="new">错误</target>
+        </trans-unit>
       </group>
     </body>
   </file>

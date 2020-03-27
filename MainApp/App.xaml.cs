@@ -1,19 +1,10 @@
 ﻿using PresentVideoRecorder.Helpers;
 using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Runtime.InteropServices.WindowsRuntime;
 using Windows.ApplicationModel;
 using Windows.ApplicationModel.Activation;
-using Windows.Foundation;
-using Windows.Foundation.Collections;
+using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Controls.Primitives;
-using Windows.UI.Xaml.Data;
-using Windows.UI.Xaml.Input;
-using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
 
 namespace PresentVideoRecorder
@@ -31,6 +22,15 @@ namespace PresentVideoRecorder
         {
             this.InitializeComponent();
             this.Suspending += OnSuspending;
+            this.UnhandledException += App_UnhandledException;
+        }
+
+        private async void App_UnhandledException(object sender, Windows.UI.Xaml.UnhandledExceptionEventArgs e)
+        {
+            e.Handled = true;
+            Logger.Instance.Critical($"Critical exception handled by the application. The detail is {e}.");
+            Windows.UI.Popups.MessageDialog msgDialog = new Windows.UI.Popups.MessageDialog("Uncatched exception", $"{e.Exception}");
+            await msgDialog.ShowAsync();
         }
 
         /// <summary>
@@ -69,6 +69,7 @@ namespace PresentVideoRecorder
                     // parameter
                     rootFrame.Navigate(typeof(MainPage), e.Arguments);
                 }
+                
                 // Ensure the current window is active
                 Window.Current.Activate();
             }
