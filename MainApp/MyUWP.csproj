@@ -184,7 +184,6 @@
     <AppxManifest Include="Package.appxmanifest">
       <SubType>Designer</SubType>
     </AppxManifest>
-    <None Include="MyUWP_TemporaryKey.pfx" />
     <PRIResource Include="Strings\qps-ploc\Resources.resw" />
     <PRIResource Include="Strings\zh-Hans\Resources.resw" />
   </ItemGroup>
