@@ -7,8 +7,8 @@
     <body>
       <group id="MYUWP/STRINGS/ZH-HANS/RESOURCES.RESW" datatype="resx">
         <trans-unit id="AppDescription" translate="yes" xml:space="preserve">
-          <source>中山医院在线视频录制系统可以帮助你快速录制、编辑、转码和发布你的课程。</source>
-          <target state="new">中山医院在线视频录制系统可以帮助你快速录制、编辑、转码和发布你的课程。</target>
+          <source>本系统可以帮助您快速录制、编辑、转码和发布您的在线课程供大家学习。</source>
+          <target state="new">本系统可以帮助您快速录制、编辑、转码和发布您的在线课程供大家学习。</target>
         </trans-unit>
         <trans-unit id="AppDisplayName" translate="yes" xml:space="preserve">
           <source>中山医院在线学习课程录制系统</source>
@@ -89,6 +89,102 @@
         <trans-unit id="Error" translate="yes" xml:space="preserve">
           <source>错误</source>
           <target state="new">错误</target>
+        </trans-unit>
+        <trans-unit id="WelcomeWord" translate="yes" xml:space="preserve">
+          <source>欢迎您使用中山医院在线学习课程录制系统</source>
+          <target state="new">欢迎您使用中山医院在线学习课程录制系统</target>
+        </trans-unit>
+        <trans-unit id="ChooseFunction_WC" translate="yes" xml:space="preserve">
+          <source>请点击您所需要的功能按钮：</source>
+          <target state="new">请点击您所需要的功能按钮：</target>
+        </trans-unit>
+        <trans-unit id="CreateNewCourse" translate="yes" xml:space="preserve">
+          <source>录制一个全新的课程</source>
+          <target state="new">录制一个全新的课程</target>
+        </trans-unit>
+        <trans-unit id="OpenExistedCouse" translate="yes" xml:space="preserve">
+          <source>打开一个录制好的课程</source>
+          <target state="new">打开一个录制好的课程</target>
+        </trans-unit>
+        <trans-unit id="CreateNewFunctionDesc" translate="yes" xml:space="preserve">
+          <source>选择我会帮助您从新开始录制一个新的在线课程</source>
+          <target state="new">选择我会帮助您从新开始录制一个新的在线课程</target>
+        </trans-unit>
+        <trans-unit id="OpenExistedFunctionDesc" translate="yes" xml:space="preserve">
+          <source>选择我会帮助您打开一个已经录制好的在线课程并进行后续工作</source>
+          <target state="new">选择我会帮助您打开一个已经录制好的在线课程并进行后续工作</target>
+        </trans-unit>
+        <trans-unit id="CancelAndClose" translate="yes" xml:space="preserve">
+          <source>放弃并关闭</source>
+          <target state="new">放弃并关闭</target>
+        </trans-unit>
+        <trans-unit id="CreateNewCourseDialogTitle" translate="yes" xml:space="preserve">
+          <source>请输入新课程的基本信息并点击创建按钮</source>
+          <target state="new">请输入新课程的基本信息并点击创建按钮</target>
+        </trans-unit>
+        <trans-unit id="CreateNewCourseText" translate="yes" xml:space="preserve">
+          <source>创建新课程</source>
+          <target state="new">创建新课程</target>
+        </trans-unit>
+        <trans-unit id="OpenExistedCourseDialogTitle" translate="yes" xml:space="preserve">
+          <source>请选择课程所在目录并选择加载后的选项</source>
+          <target state="new">请选择课程所在目录并选择加载后的选项</target>
+        </trans-unit>
+        <trans-unit id="ActionChooseForContinue_WC" translate="yes" xml:space="preserve">
+          <source>请选择要载入后的选项：</source>
+          <target state="new">请选择要载入后的选项：</target>
+        </trans-unit>
+        <trans-unit id="EditCourseActionText" translate="yes" xml:space="preserve">
+          <source>我要编辑课程视频</source>
+          <target state="new">我要编辑课程视频</target>
+        </trans-unit>
+        <trans-unit id="LoadAndContinueWorkText" translate="yes" xml:space="preserve">
+          <source>载入并继续处理该课程</source>
+          <target state="new">载入并继续处理该课程</target>
+        </trans-unit>
+        <trans-unit id="RecordCourseActionText" translate="yes" xml:space="preserve">
+          <source>我要继续录制课程视频</source>
+          <target state="new">我要继续录制课程视频</target>
+        </trans-unit>
+        <trans-unit id="TanscodeCourseActionText" translate="yes" xml:space="preserve">
+          <source>我要将课程内容转码</source>
+          <target state="new">我要将课程内容转码</target>
+        </trans-unit>
+        <trans-unit id="UploadCourseActionText" translate="yes" xml:space="preserve">
+          <source>我要上传课程内容</source>
+          <target state="new">我要上传课程内容</target>
+        </trans-unit>
+        <trans-unit id="CurrentCourseName_WC" translate="yes" xml:space="preserve">
+          <source>当前课程：</source>
+          <target state="new">当前课程：</target>
+        </trans-unit>
+        <trans-unit id="CourseIsRecordingNeedExit" translate="yes" xml:space="preserve">
+          <source>您当前有课程正在录制过程中，你确定要离开并停止录制吗？</source>
+          <target state="new">您当前有课程正在录制过程中，你确定要离开并停止录制吗？</target>
+        </trans-unit>
+        <trans-unit id="RecordingTimeText_WC" translate="yes" xml:space="preserve">
+          <source>录制时长：</source>
+          <target state="new">录制时长：</target>
+        </trans-unit>
+        <trans-unit id="CourseRecordStopped" translate="yes" xml:space="preserve">
+          <source>课程录制已经停止！</source>
+          <target state="new">课程录制已经停止！</target>
+        </trans-unit>
+        <trans-unit id="Info" translate="yes" xml:space="preserve">
+          <source>提示信息</source>
+          <target state="new">提示信息</target>
+        </trans-unit>
+        <trans-unit id="AudioCombineNoneVideo" translate="yes" xml:space="preserve">
+          <source>将音频独立保存</source>
+          <target state="new">将音频独立保存</target>
+        </trans-unit>
+        <trans-unit id="AudioCombineWithCameraVideo" translate="yes" xml:space="preserve">
+          <source>将音频与摄像机视频合并</source>
+          <target state="new">将音频与摄像机视频合并</target>
+        </trans-unit>
+        <trans-unit id="AudioCombineWithScreenVideo" translate="yes" xml:space="preserve">
+          <source>将音频与屏幕视频合并</source>
+          <target state="new">将音频与屏幕视频合并</target>
         </trans-unit>
       </group>
     </body>

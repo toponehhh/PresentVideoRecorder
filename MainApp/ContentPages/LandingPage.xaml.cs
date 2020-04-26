@@ -11,6 +11,7 @@ using Windows.UI.Xaml.Controls.Primitives;
 using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
+using Windows.UI.Xaml.Media.Animation;
 using Windows.UI.Xaml.Navigation;
 
 // The Blank Page item template is documented at https://go.microsoft.com/fwlink/?LinkId=234238
@@ -26,15 +27,10 @@ namespace PresentVideoRecorder.ContentPages
         {
             this.InitializeComponent();
         }
-
-        private void BtnEdit_Click(object sender, RoutedEventArgs e)
+        protected override void OnNavigatedTo(NavigationEventArgs e)
         {
-            Frame.Navigate(typeof(EditPage));
-        }
-
-        private void BtnRecord_Click(object sender, RoutedEventArgs e)
-        {
-            Frame.Navigate(typeof(RecordPage));
+            var f = this.Resources["TitleTextFadeInSB"] as Storyboard;
+            if (f != null) f.Begin();
         }
     }
 }

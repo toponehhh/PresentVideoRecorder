@@ -7,9 +7,15 @@
     >
     <Application.Resources>
         <ResourceDictionary>
+            <x:Double x:Key="ContentDialogMaxWidth">800</x:Double>
+            <x:Double x:Key="ContentDialogMaxHeight">756</x:Double>
             <helpers:LocalizedStrings x:Key="Localized"/>
             <helpers:ViewModelLocator x:Key="VmLocator"/>
             <converts:BoolNegationConverter x:Key="BoolNegationConverter"/>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="Themes/NightTime.xaml"></ResourceDictionary>
+                <ResourceDictionary Source="Themes/ControlStyles.xaml"></ResourceDictionary>
+            </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </Application.Resources>
 </Application>

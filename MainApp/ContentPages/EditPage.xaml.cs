@@ -2,7 +2,9 @@
 using PresentVideoRecorder.ViewModels.ContentPageViewModels;
 using System;
 using System.Linq;
+using System.Threading.Tasks;
 using Windows.Media.Editing;
+using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Navigation;
@@ -26,16 +28,26 @@ namespace PresentVideoRecorder.ContentPages
         {
             cameraVideoPlayer.IsFullWindow = false;
             screenVideoPlayer.IsFullWindow = false;
+            ApplicationView.GetForCurrentView().ExitFullScreenMode();
         }
 
-        protected override void OnNavigatedTo(NavigationEventArgs e)
+        protected async override void OnNavigatedTo(NavigationEventArgs e)
         {
             base.OnNavigatedTo(e);
             var viewModel = DataContext as EditPageViewModel;
             if (viewModel != null)
             {
+                LoadingControl.IsLoading = true;
                 viewModel.InitMediaPlayers(cameraVideoPlayer, screenVideoPlayer);
+                while (viewModel.IsAppInBusyStatus) await Task.Delay(1000);
+                await viewModel.LoadCourseData();
+                LoadingControl.IsLoading = false;
             }
+        }
+
+        protected override void OnNavigatingFrom(NavigatingCancelEventArgs e)
+        {
+            base.OnNavigatingFrom(e);
         }
 
         private void TrimAllButCurrentRange(MediaComposition composition, RangeSelector rangeSelector)
@@ -81,11 +93,13 @@ namespace PresentVideoRecorder.ContentPages
 
         private void btnSetCameraVideoFull_Click(object sender, Windows.UI.Xaml.RoutedEventArgs e)
         {
+            ApplicationView.GetForCurrentView().TryEnterFullScreenMode();
             cameraVideoPlayer.IsFullWindow = true;
         }
 
         private void btnSetScreenVideoFull_Click(object sender, Windows.UI.Xaml.RoutedEventArgs e)
         {
+            ApplicationView.GetForCurrentView().TryEnterFullScreenMode();
             screenVideoPlayer.IsFullWindow = true;
         }
 

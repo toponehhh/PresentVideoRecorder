@@ -1,4 +1,5 @@
 ﻿using PresentVideoRecorder.ContentPages;
+using PresentVideoRecorder.ViewModels;
 using System;
 using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
@@ -14,10 +15,12 @@ namespace PresentVideoRecorder
     /// </summary>
     public sealed partial class MainPage : Page
     {
+        private MainPageViewModel _mainVM;
         public MainPage()
         {
             this.InitializeComponent();
-            ApplicationView.PreferredLaunchWindowingMode = ApplicationViewWindowingMode.Maximized;
+            _mainVM = this.DataContext as MainPageViewModel;
+            _mainVM.ContentFrame = contentFrame;
         }
 
         private void NavView_Navigate(string navItemTag, NavigationTransitionInfo transitionInfo)
@@ -51,7 +54,14 @@ namespace PresentVideoRecorder
             // Only navigate if the selected page isn't currently loaded.
             if (!(_page is null) && !Type.Equals(preNavPageType, _page))
             {
-                contentFrame.Navigate(_page, null, transitionInfo);
+                if (_mainVM.CurrentWorkingCourse != null)
+                {
+                    contentFrame.Navigate(_page, null, transitionInfo);
+                }
+                else
+                {
+                    _mainVM.LoadExistedCourse();
+                }
             }
         }
 
@@ -68,8 +78,15 @@ namespace PresentVideoRecorder
             }
             else if (args.InvokedItemContainer != null)
             {
-                var navItemTag = args.InvokedItemContainer.Tag.ToString();
-                NavView_Navigate(navItemTag, args.RecommendedNavigationTransitionInfo);
+                if (_mainVM.CurrentWorkingCourse != null)
+                {
+                    var navItemTag = args.InvokedItemContainer.Tag.ToString();
+                    NavView_Navigate(navItemTag, args.RecommendedNavigationTransitionInfo);
+                }
+                else
+                {
+                    _mainVM.LoadExistedCourse();
+                }
             }
         }
     }

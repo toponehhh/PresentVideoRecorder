@@ -4,17 +4,50 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    mc:Ignorable="d"
-    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+    DataContext="{Binding MainPageVM, Source={StaticResource VmLocator}}"
+    mc:Ignorable="d" BackgroundSizing="OuterBorderEdge" HighContrastAdjustment="Auto"
+    >
+    <Page.TopAppBar>
+        <CommandBar HorizontalAlignment="Left" OverflowButtonVisibility="Collapsed">
+            <CommandBar.Content>
+                <NavigationViewItemHeader Content="{Binding Path=[AppDisplayName], Source={StaticResource Localized}}" ></NavigationViewItemHeader>
+            </CommandBar.Content>
+        </CommandBar>
+    </Page.TopAppBar>
+    <Page.Background>
+        <ImageBrush ImageSource="/Assets/LandingBack.jpg" Stretch="UniformToFill" Opacity="0.3"/>
+    </Page.Background>
 
-    <NavigationView x:Name="nvSample" PaneTitle="功能选项" Loaded="NvSample_Loaded" ItemInvoked="NvSample_ItemInvoked">
+    <NavigationView x:Name="nvSample" Loaded="NvSample_Loaded" CanBeScrollAnchor="True" ItemInvoked="NvSample_ItemInvoked" PaneDisplayMode="Top" IsBackButtonVisible="Collapsed" IsBackEnabled="False">
         <NavigationView.MenuItems>
-            <NavigationViewItem Content="课程录制" Tag="RecordPage" Icon="Video" />
-            <NavigationViewItem Content="课程编辑" Icon="Edit" Tag="EditPage" />
+            <!--<NavigationViewItem Tag="RecordPage">
+                <StackPanel Orientation="Horizontal">
+                    <Image Source="/Assets/StartVideo.png" Width="24"/>
+                    <TextBlock Text="课程录制" VerticalAlignment="Center" FontSize="18" Foreground="White"/>
+                </StackPanel>
+            </NavigationViewItem>-->
+            <!--<NavigationViewItem Content="课程编辑" Icon="Edit" Tag="EditPage" />
             <NavigationViewItem Content="视频转码" Icon="MoveToFolder" Tag="TransCodePage" />
-            <NavigationViewItem Content="课程发布" Icon="Upload" Tag="PublishPage" />
+            <NavigationViewItem Content="课程发布" Icon="Upload" Tag="PublishPage" />-->
+            <CommandBar Background="Transparent" DefaultLabelPosition="Right">
+                <AppBarButton Label="课程编辑" Icon="Edit" CommandParameter="EditPage" Command="{Binding DataContext.NavigateToPageCommand, ElementName=nvSample}" />
+                <AppBarButton Label="视频转码" Icon="MoveToFolder" CommandParameter="TransCodePage" Command="{Binding DataContext.NavigateToPageCommand, ElementName=nvSample}"/>
+                <AppBarButton Label="课程发布" Icon="Upload" CommandParameter="PublishPage" Command="{Binding DataContext.NavigateToPageCommand, ElementName=nvSample}"/>
+            </CommandBar>
         </NavigationView.MenuItems>
-        <NavigationView.Header>
+        <NavigationView.PaneCustomContent>
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
+                <NavigationViewItemHeader FontSize="16" Content="{Binding Path=[CurrentCourseName_WC], Source={StaticResource Localized}}" />
+                <HyperlinkButton Content="{Binding CurrentWorkingCourse.Name}" FontSize="14" Command="{Binding ReloadCourseCommand}"/>
+            </StackPanel>
+        </NavigationView.PaneCustomContent>
+        <NavigationView.PaneFooter>
+            <CommandBar Background="Transparent" DefaultLabelPosition="Right">
+                <AppBarButton Label="{Binding [CreateNewCourseText], Source={StaticResource Localized}}" Icon="Add" Command="{Binding CreateNewCourseCommand}"/>
+                <AppBarSeparator />
+            </CommandBar>
+        </NavigationView.PaneFooter>
+        <!--<NavigationView.Header>
             <Border>
                 <Border.Background>
                     <LinearGradientBrush EndPoint="1,1" StartPoint="0,0">
@@ -28,7 +61,13 @@
                     </TextBlock.Foreground>
                 </TextBlock>
             </Border>
-        </NavigationView.Header>
-        <Frame x:Name="contentFrame"/>
+        </NavigationView.Header>-->
+        <Frame x:Name="contentFrame">
+            <Frame.ContentTransitions>
+                <TransitionCollection>
+                    <NavigationThemeTransition />
+                </TransitionCollection>
+            </Frame.ContentTransitions>
+        </Frame>
     </NavigationView>
 </Page>

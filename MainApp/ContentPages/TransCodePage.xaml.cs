@@ -1,4 +1,5 @@
-﻿using System;
+﻿using PresentVideoRecorder.ViewModels.ContentPageViewModels;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -25,6 +26,21 @@ namespace PresentVideoRecorder.ContentPages
         public TransCodePage()
         {
             this.InitializeComponent();
+        }
+
+        protected override void OnNavigatedTo(NavigationEventArgs e)
+        {
+            base.OnNavigatedTo(e);
+            var viewModel = this.DataContext as TansCodePageViewModel;
+            if (viewModel != null)
+            {
+                viewModel.LoadCourseData();
+            }
+        }
+
+        private void cbAudioCombinToVideoWays_Loaded(object sender, RoutedEventArgs e)
+        {
+            cbAudioCombinToVideoWays.SelectedIndex = 0;
         }
     }
 }

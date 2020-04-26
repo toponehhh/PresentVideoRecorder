@@ -100,7 +100,10 @@ namespace PresentVideoRecorder.Helpers
             {
                 using (var frame = _framePool.TryGetNextFrame())
                 {
-                    processFrame(frame);
+                    if (frame != null)
+                    {
+                        processFrame(frame);
+                    }
                 }
             };
 

@@ -2,6 +2,10 @@
 using System;
 using Windows.ApplicationModel;
 using Windows.ApplicationModel.Activation;
+using Windows.ApplicationModel.Core;
+using Windows.Foundation;
+using Windows.Graphics.Display;
+using Windows.UI;
 using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
@@ -33,6 +37,14 @@ namespace PresentVideoRecorder
             await msgDialog.ShowAsync();
         }
 
+        private void ExtendAcrylicIntoTitleBar()
+        {
+            CoreApplication.GetCurrentView().TitleBar.ExtendViewIntoTitleBar = true;
+            ApplicationViewTitleBar titleBar = ApplicationView.GetForCurrentView().TitleBar;
+            titleBar.ButtonBackgroundColor = Colors.Transparent;
+            titleBar.ButtonInactiveBackgroundColor = Colors.Transparent;
+        }
+
         /// <summary>
         /// Invoked when the application is launched normally by the end user.  Other entry points
         /// will be used such as when the application is launched to open a specific file.
@@ -41,7 +53,7 @@ namespace PresentVideoRecorder
         protected override void OnLaunched(LaunchActivatedEventArgs e)
         {
             Frame rootFrame = Window.Current.Content as Frame;
-
+            MaximizeWindowOnLoad();
             // Do not repeat app initialization when the Window already has content,
             // just ensure that the window is active
             if (rootFrame == null)
@@ -69,11 +81,28 @@ namespace PresentVideoRecorder
                     // parameter
                     rootFrame.Navigate(typeof(MainPage), e.Arguments);
                 }
-                
+
                 // Ensure the current window is active
                 Window.Current.Activate();
+                ExtendAcrylicIntoTitleBar();
             }
             Logger.Instance.Info("Application started!");
+        }
+
+        private void MaximizeWindowOnLoad()
+        {
+            var view = DisplayInformation.GetForCurrentView();
+
+            // Get the screen resolution (APIs available from 14393 onward).
+            var resolution = new Size(view.ScreenWidthInRawPixels, view.ScreenHeightInRawPixels);
+
+            // Calculate the screen size in effective pixels.
+            // Note the height of the Windows Taskbar is ignored here since the app will only be given the maxium available size.
+            var scale = view.ResolutionScale == ResolutionScale.Invalid ? 1 : view.RawPixelsPerViewPixel;
+            var bounds = new Size(resolution.Width / scale, resolution.Height / scale);
+
+            ApplicationView.PreferredLaunchViewSize = new Size(bounds.Width, bounds.Height);
+            ApplicationView.PreferredLaunchWindowingMode = ApplicationViewWindowingMode.PreferredLaunchViewSize;
         }
 
         /// <summary>

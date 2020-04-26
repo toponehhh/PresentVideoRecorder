@@ -1,4 +1,6 @@
 ﻿using Microsoft.Toolkit.Uwp.Helpers;
+using PresentVideoRecorder.Dialogs;
+using PresentVideoRecorder.ViewModels.ContentDialogViewModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -6,6 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Windows.Foundation;
 using Windows.Graphics.Capture;
+using Windows.Storage;
 using Windows.UI.Popups;
 
 namespace PresentVideoRecorder.Helpers
@@ -71,6 +74,56 @@ namespace PresentVideoRecorder.Helpers
             }
             return null;
         }
+
+        public async Task<IStorageFolder> ShowSaveFolderPicker()
+        {
+            return await DispatcherHelper.ExecuteOnUIThreadAsync(async () =>
+            {
+                var folderPicker = new Windows.Storage.Pickers.FolderPicker();
+                folderPicker.SuggestedStartLocation = Windows.Storage.Pickers.PickerLocationId.VideosLibrary;
+                folderPicker.FileTypeFilter.Add("*");
+
+                var saveFolder = await folderPicker.PickSingleFolderAsync();
+                if (saveFolder != null)
+                {
+                    Windows.Storage.AccessCache.StorageApplicationPermissions.FutureAccessList.AddOrReplace("PickedFolderToken", saveFolder);
+                    return saveFolder;
+                }
+                else
+                {
+                    return saveFolder;
+                }
+            });
+        }
+
+        public async Task<CreateNewCourseDialogViewModel> ShowCreateNewCourseDialog()
+        {
+            return await DispatcherHelper.ExecuteOnUIThreadAsync(async () =>
+            {
+                CreateNewCourseDialog createNewCourseDialog = new CreateNewCourseDialog();
+                var dialogResult = await createNewCourseDialog.ShowAsync();
+                if (dialogResult == Windows.UI.Xaml.Controls.ContentDialogResult.Primary)
+                {
+                    return createNewCourseDialog.DataContext as CreateNewCourseDialogViewModel;
+                }
+                return null;
+            });
+        }
+
+        public async Task<LoadCourseDialogModelViewModel> ShowLoadCourseDialog()
+        {
+            return await DispatcherHelper.ExecuteOnUIThreadAsync(async () =>
+            {
+                OpenExistedCourseContentDialog loadCourseDialog = new OpenExistedCourseContentDialog();
+                var dialogResult = await loadCourseDialog.ShowAsync();
+                if (dialogResult == Windows.UI.Xaml.Controls.ContentDialogResult.Primary)
+                {
+                    return loadCourseDialog.DataContext as LoadCourseDialogModelViewModel;
+                }
+                return null;
+            });
+        }
+
     }
 
     public interface IDialogService
@@ -79,5 +132,10 @@ namespace PresentVideoRecorder.Helpers
         Task<bool> ShowConfirmMessage(string title, string messageContent);
 
         Task<GraphicsCaptureItem> ShowGraphicsCapturePicker();
+
+        Task<IStorageFolder> ShowSaveFolderPicker();
+
+        Task<CreateNewCourseDialogViewModel> ShowCreateNewCourseDialog();
+        Task<LoadCourseDialogModelViewModel> ShowLoadCourseDialog();
     }
 }

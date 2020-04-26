@@ -7,11 +7,10 @@
     xmlns:i="using:Microsoft.Xaml.Interactivity"
     xmlns:core="using:Microsoft.Xaml.Interactions.Core"
     mc:Ignorable="d"
-    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
     DataContext="{Binding Source={StaticResource VmLocator}, Path=TansCodePageVM}"
     >
 
-    <Grid HorizontalAlignment="Stretch" Margin="24">
+    <Grid VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Margin="24">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*"/>
             <ColumnDefinition Width="*"/>
@@ -24,34 +23,8 @@
             <RowDefinition Height="50"></RowDefinition>
             <RowDefinition Height="100"></RowDefinition>
         </Grid.RowDefinitions>
+
         <Grid Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="3">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*"/>
-                <ColumnDefinition Width="*"/>
-            </Grid.ColumnDefinitions>
-
-            <Grid Grid.Column="0" ColumnSpacing="2">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="140"></ColumnDefinition>
-                    <ColumnDefinition Width="*"></ColumnDefinition>
-                </Grid.ColumnDefinitions>
-                <TextBlock Text="{Binding Path=[CourseSaveName_WC], Source={StaticResource Localized}}" VerticalAlignment="Center" Grid.Column="0"/>
-                <TextBox Grid.Column="1" VerticalAlignment="Center" VerticalContentAlignment="Center" HorizontalAlignment="Stretch" Margin="5" Text="{Binding CourseName, Mode=TwoWay}" IsEnabled="{Binding IsRecording, Converter={StaticResource BoolNegationConverter}}"/>
-            </Grid>
-
-            <Grid Grid.Column="2" ColumnSpacing="2" Margin="20,0,0,0">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="120"></ColumnDefinition>
-                    <ColumnDefinition Width="*"></ColumnDefinition>
-                    <ColumnDefinition Width="50"></ColumnDefinition>
-                </Grid.ColumnDefinitions>
-                <TextBlock Text="{Binding [CourseSavePath_WC],Source={StaticResource Localized}}" VerticalAlignment="Center" Grid.Column="0"/>
-                <TextBox Height="35" VerticalAlignment="Center" HorizontalAlignment="Stretch" Grid.Column="1" Margin="5" IsReadOnly="True" Text="{Binding CourseSavePath}"/>
-                <Button Height="35" HorizontalAlignment="Stretch" Grid.Column="2" Content="..." Margin="0,0,5,0" Command="{Binding LoadCourseCommand}"/>
-            </Grid>
-        </Grid>
-
-        <Grid Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="3">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*"/>
                 <ColumnDefinition Width="*"/>
@@ -72,38 +45,76 @@
                     <ColumnDefinition Width="120"></ColumnDefinition>
                     <ColumnDefinition Width="*"></ColumnDefinition>
                 </Grid.ColumnDefinitions>
-                <TextBlock VerticalAlignment="Center" Grid.Column="0" Text="音频合并方式" />
-                <ComboBox x:Name="cbAudioCombinToVideoWays" Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Stretch" Margin="5" ItemsSource="{Binding CombinAudioWaySource}" DisplayMemberPath="Key" SelectedValuePath="Value" SelectedValue="{Binding SelectedCombinAudioWay, Mode=TwoWay}"/>
-
+                <TextBlock VerticalAlignment="Center" Grid.Column="0" Text="音频合并方式：" />
+                <ComboBox x:Name="cbAudioCombinToVideoWays" Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Stretch" Margin="5" ItemsSource="{Binding CombinAudioWaySource}" DisplayMemberPath="Key" SelectedValuePath="Value" SelectedValue="{Binding SelectedCombinAudioWay, Mode=TwoWay}" Loaded="cbAudioCombinToVideoWays_Loaded"/>
             </Grid>
         </Grid>
 
-        <Grid Grid.Row="2" Grid.Column="0">
+        <Grid Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="3">
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="120"/>
+                <ColumnDefinition Width="*"/>
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
-            <CheckBox Content="转换高清视频:" Grid.Column="0" HorizontalAlignment="Left" VerticalAlignment="Center" IsChecked="{Binding NeedTanscodeHighQuantity, Mode=TwoWay}"></CheckBox>
-            <ProgressBar Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Stretch"  Height="30" Margin="10,0"/>
+            <Grid Grid.Column="0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="140"></ColumnDefinition>
+                    <ColumnDefinition Width="*"></ColumnDefinition>
+                </Grid.ColumnDefinitions>
+                <TextBlock Text="摄像机视频保存进度：" VerticalAlignment="Center" Grid.Column="0"/>
+                <ProgressBar Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Stretch"  Height="30" Margin="5,0,5,0" Value="{Binding CameraFinalVideoConvertProgress}"/>
+            </Grid>
+            <Grid Grid.Column="1" Margin="20,0,0,0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="120"></ColumnDefinition>
+                    <ColumnDefinition Width="*"></ColumnDefinition>
+                </Grid.ColumnDefinitions>
+                <TextBlock VerticalAlignment="Center" Grid.Column="0" Text="屏幕视频保存进度：" />
+                <ProgressBar Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Stretch"  Height="30" Margin="5,0,5,0" Value="{Binding ScreenFinalVideoConvertProgress}"/>
+            </Grid>
         </Grid>
 
-        <Grid Grid.Row="2" Grid.Column="1" Margin="20,0,0,0">
+        <Grid Grid.Row="2" Grid.Column="0" Grid.RowSpan="2">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="120"/>
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
-            <CheckBox Content="转换标清视频:" Grid.Column="0" HorizontalAlignment="Left" VerticalAlignment="Center" IsChecked="{Binding NeedTanscodeMediumQuantity, Mode=TwoWay}"></CheckBox>
-            <ProgressBar Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Stretch"  Height="30" Margin="10,0"/>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="50"/>
+                <RowDefinition Height="50"/>
+            </Grid.RowDefinitions>
+            <ToggleSwitch Header="转换高清视频" Grid.Column="0" Grid.RowSpan="2" IsOn="{Binding NeedTanscodeHighQuantity, Mode=TwoWay}" OnContent="{Binding Path=[Yes], Source={StaticResource Localized}}" OffContent="{Binding Path=[No], Source={StaticResource Localized}}"/>
+            <ProgressBar Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Stretch"  Height="30" Margin="10,0" Value="{Binding CameraHighVideoConvertProgress}"/>
+            <ProgressBar Grid.Row="1" Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Stretch"  Height="30" Margin="10,0" Value="{Binding ScreenHighVideoConvertProgress}"/>
         </Grid>
 
-        <Grid Grid.Row="2" Grid.Column="2" Margin="20,0,0,0">
+        <Grid Grid.Row="2" Grid.Column="1" Margin="20,0,0,0" Grid.RowSpan="2">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="120"/>
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
-            <CheckBox Content="转换流畅视频:" Grid.Column="0" HorizontalAlignment="Left" VerticalAlignment="Center" IsChecked="{Binding NeedTanscodeLowQuantity, Mode=TwoWay}"></CheckBox>
-            <ProgressBar Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Stretch"  Height="30" Margin="10,0,5,0"/>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="50"/>
+                <RowDefinition Height="50"/>
+            </Grid.RowDefinitions>
+            <ToggleSwitch Header="转换清晰视频" Grid.Column="0" Grid.RowSpan="2" IsOn="{Binding NeedTanscodeMediumQuantity, Mode=TwoWay}" OnContent="{Binding Path=[Yes], Source={StaticResource Localized}}" OffContent="{Binding Path=[No], Source={StaticResource Localized}}"/>
+            <ProgressBar Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Stretch"  Height="30" Margin="10,0" Value="{Binding CameraMediumVideoConvertProgress}"/>
+            <ProgressBar Grid.Row="1" Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Stretch"  Height="30" Margin="10,0" Value="{Binding ScreenMediumVideoConvertProgress}"/>
         </Grid>
+
+        <Grid Grid.Row="2" Grid.Column="2" Margin="20,0,0,0" Grid.RowSpan="2">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="120"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="50"/>
+                <RowDefinition Height="50"/>
+            </Grid.RowDefinitions>
+            <ToggleSwitch Header="转换流畅视频" Grid.Column="0" Grid.RowSpan="2" IsOn="{Binding NeedTanscodeLowQuantity, Mode=TwoWay}" OnContent="{Binding Path=[Yes], Source={StaticResource Localized}}" OffContent="{Binding Path=[No], Source={StaticResource Localized}}"/>
+            <ProgressBar Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Stretch"  Height="30" Margin="10,0,5,0" Value="{Binding CameraLowVideoConvertProgress}"/>
+            <ProgressBar Grid.Row="1" Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Stretch"  Height="30" Margin="10,0,5,0" Value="{Binding ScreenLowVideoConvertProgress}"/>
+        </Grid>
+        
          
         <Grid Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="3">
             <Grid.ColumnDefinitions>
@@ -123,7 +134,7 @@
                     </Grid>
                 </Button.Content>
             </Button>
-            <Button Grid.Column="1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="24">
+            <!--<Button Grid.Column="1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="24" Command="{Binding StopTanscodeCommand}">
                 <Button.Content>
                     <Grid HorizontalAlignment="Stretch">
                         <Grid.ColumnDefinitions>
@@ -134,8 +145,8 @@
                         <TextBlock Text="停止转码" Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Center"></TextBlock>
                     </Grid>
                 </Button.Content>
-            </Button>
-            <Button Grid.Column="2" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="24">
+            </Button>-->
+            <Button Grid.Column="2" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="24" Command="{Binding StopTanscodeCommand}">
                 <Button.Content>
                     <Grid HorizontalAlignment="Stretch">
                         <Grid.ColumnDefinitions>

@@ -7,7 +7,7 @@ using Windows.Media.MediaProperties;
 
 namespace PresentVideoRecorder.Models
 {
-    public class MediaTranscodeProfile : ModelBase
+    public class MediaTranscodeProfile
     {
         public string Name { get; set; }
         public string TanscodeFileSaveDirectory { get; set; }
@@ -19,7 +19,7 @@ namespace PresentVideoRecorder.Models
     public enum CombineAudioWay
     {
         WithCameraVideo,
-        WithDesktopVideo,
+        WithScreenVideo,
         Independent
     }
 }

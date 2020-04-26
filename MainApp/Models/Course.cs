@@ -41,31 +41,28 @@ namespace PresentVideoRecorder.Models
             return newCourse;
         }
 
-        public async Task<bool> SaveToStorageFileAsync()
+        protected override async Task<IStorageFile> GetSaveTargetFileAsync()
         {
-            bool saveResult = false;
             if (StorageFileHelper.IsFilePathValid(DataSaveDirectory))
             {
-                try
+                var courseFolder = await StorageFolder.GetFolderFromPathAsync(DataSaveDirectory);
+                var courseMetaFile = await courseFolder.TryGetItemAsync(SAVE_FILE_NAME);
+                if (courseMetaFile == null)
                 {
-                    var courseFolder = await StorageFolder.GetFolderFromPathAsync(DataSaveDirectory);
-                    var courseMetaFile = await courseFolder.CreateFileAsync(SAVE_FILE_NAME, CreationCollisionOption.ReplaceExisting);
-                    using (var fs = await courseMetaFile.OpenStreamForWriteAsync())
-                    {
-                        JsonSerializerOptions serializerOptions = createSerializerOptions();
-                        await JsonSerializer.SerializeAsync(fs, this, serializerOptions);
-                    }
-                    saveResult = true;
+                    courseMetaFile = await courseFolder.CreateFileAsync(SAVE_FILE_NAME, CreationCollisionOption.ReplaceExisting);
                 }
-                catch (Exception ex)
-                {
-                    //var dialog = new Windows.UI.Popups.MessageDialog(ex.ToString());
-                    //await dialog.ShowAsync();
-                    Logger.Instance.Error($"Failed to save the course information into the folder {DataSaveDirectory}. The detail message is {ex}");
-                    saveResult = false;
-                }
+                return courseMetaFile as IStorageFile;
             }
-            return saveResult;
+            return null;
+        }
+
+        protected override async void SaveTargetFileAsync(IStorageFile targetFile)
+        {
+            using (var fs = await targetFile.OpenStreamForWriteAsync())
+            {
+                JsonSerializerOptions serializerOptions = CreateSerializerOptions();
+                await JsonSerializer.SerializeAsync(fs, this, serializerOptions);
+            }
         }
 
         public async static Task<Course> LoadFromFile(string dataFileFullPath)
@@ -76,23 +73,11 @@ namespace PresentVideoRecorder.Models
                 var courseDataFile = await StorageFile.GetFileFromPathAsync(dataFileFullPath);
                 using (var fs = await courseDataFile.OpenStreamForReadAsync())
                 {
-                    JsonSerializerOptions serializerOptions = createSerializerOptions();
+                    JsonSerializerOptions serializerOptions = CreateSerializerOptions();
                     loadResult = await JsonSerializer.DeserializeAsync<Course>(fs, serializerOptions);
                 }
             }
             return loadResult;
-        }
-
-        private static JsonSerializerOptions createSerializerOptions()
-        {
-            JsonSerializerOptions serializerOptions = new JsonSerializerOptions();
-            serializerOptions.PropertyNamingPolicy = JsonNamingPolicy.CamelCase;
-#if DEBUG
-            serializerOptions.WriteIndented = true;
-#else
-            serializerOptions.WriteIndented = false;
-#endif
-            return serializerOptions;
         }
     }
 }

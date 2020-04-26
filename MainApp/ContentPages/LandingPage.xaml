@@ -4,12 +4,21 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:winui="using:Microsoft.UI.Xaml.Controls"
+    xmlns:AnimatedVisuals="using:AnimatedVisuals"
+    DataContext="{Binding Path=LandingPageVM, Source={StaticResource VmLocator}}"
     mc:Ignorable="d"
-    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
-
+    >
+    <Page.Resources>
+        <Storyboard x:Name="TitleTextFadeInSB">
+            <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Opacity)" Storyboard.TargetName="tbWelcome">
+                <EasingDoubleKeyFrame KeyTime="0" Value="0"/>
+                <EasingDoubleKeyFrame KeyTime="0:0:4" Value="1"/>
+            </DoubleAnimationUsingKeyFrames>
+        </Storyboard>
+    </Page.Resources>
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition></RowDefinition>
             <RowDefinition></RowDefinition>
             <RowDefinition></RowDefinition>
             <RowDefinition></RowDefinition>
@@ -18,65 +27,56 @@
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*"></ColumnDefinition>
             <ColumnDefinition Width="*"></ColumnDefinition>
-            <ColumnDefinition Width="*"></ColumnDefinition>
-            <ColumnDefinition Width="*"></ColumnDefinition>
-            <ColumnDefinition Width="*"></ColumnDefinition>
-            <ColumnDefinition Width="*"></ColumnDefinition>
-            <ColumnDefinition Width="*"></ColumnDefinition>
-            <ColumnDefinition Width="*"></ColumnDefinition>
         </Grid.ColumnDefinitions>
-        <TextBlock Text="开始使用" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="3" FontSize="48" VerticalAlignment="Center" Margin="90,0,0,0"></TextBlock>
-        <TextBlock Text="中山医院在线视频录制系统可以帮助你快速录制、编辑、转码和发布你的课程。" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="8" FontSize="28" TextWrapping="Wrap" Margin="90,0,0,0"></TextBlock>
-        <Grid Grid.Row="2" Grid.Column="0" Grid.RowSpan="2" Grid.ColumnSpan="2">
-            <Grid.RowDefinitions>
-                <RowDefinition Height="2*"></RowDefinition>
-                <RowDefinition></RowDefinition>
-            </Grid.RowDefinitions>
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition></ColumnDefinition>
-                <ColumnDefinition></ColumnDefinition>
-            </Grid.ColumnDefinitions>
-            <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xE116;" FontSize="200" Grid.Row="0" Grid.ColumnSpan="2"/>
-            <Button x:Name="btnRecord" FontSize="18" Grid.Row="1" Grid.ColumnSpan="2" Content="开始课程录像" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Margin="85,20,85,20" Click="BtnRecord_Click"></Button>
-        </Grid>
+        <TextBlock x:Name="tbWelcome" Text="{Binding Path=[WelcomeWord], Source={StaticResource Localized}}" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Foreground="DodgerBlue" FontSize="56" CharacterSpacing="100" FontStyle="Italic" FontWeight="Bold" VerticalAlignment="Center" Margin="90,0,0,0"></TextBlock>
+        <TextBlock Text="{Binding Path=[AppDescription], Source={StaticResource Localized}}" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" Foreground="CornflowerBlue" FontSize="46" CharacterSpacing="80" TextWrapping="Wrap" Margin="90,0,0,0"/>
+        <TextBlock Text="{Binding Path=[ChooseFunction_WC], Source={StaticResource Localized}}" Grid.Row="1" Grid.ColumnSpan="2" FontSize="40" VerticalAlignment="Bottom" HorizontalAlignment="Center" CharacterSpacing="80" Foreground="{StaticResource SystemAccentColorLight1}"/>
 
-        <Grid Grid.Row="2" Grid.Column="2" Grid.RowSpan="2" Grid.ColumnSpan="2">
-            <Grid.RowDefinitions>
-                <RowDefinition Height="2*"></RowDefinition>
-                <RowDefinition></RowDefinition>
-            </Grid.RowDefinitions>
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*"></ColumnDefinition>
-                <ColumnDefinition Width="*"></ColumnDefinition>
-            </Grid.ColumnDefinitions>
-            <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xE16B;" FontSize="180" Grid.Row="0" Grid.ColumnSpan="2"/>
-            <Button x:Name="btnEdit" FontSize="18" Grid.ColumnSpan="2" Content="编辑课程录像" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Margin="85,20,85,20" Click="BtnEdit_Click" Grid.Row="1" Grid.RowSpan="1"/>
-        </Grid>
-
-        <Grid Grid.Row="2" Grid.Column="4" Grid.RowSpan="2" Grid.ColumnSpan="2">
-            <Grid.RowDefinitions>
-                <RowDefinition Height="2*"></RowDefinition>
-                <RowDefinition></RowDefinition>
-            </Grid.RowDefinitions>
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition></ColumnDefinition>
-                <ColumnDefinition></ColumnDefinition>
-            </Grid.ColumnDefinitions>
-            <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xE1DF;" FontSize="180" Grid.Row="0" Grid.ColumnSpan="2"/>
-            <Button FontSize="18" Grid.Row="1" Grid.ColumnSpan="2" Content="课程录像转码" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Margin="85,20,85,20"></Button>
-        </Grid>
-
-        <Grid Grid.Row="2" Grid.Column="6" Grid.RowSpan="2" Grid.ColumnSpan="2">
-            <Grid.RowDefinitions>
-                <RowDefinition Height="2*"></RowDefinition>
-                <RowDefinition></RowDefinition>
-            </Grid.RowDefinitions>
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition></ColumnDefinition>
-                <ColumnDefinition></ColumnDefinition>
-            </Grid.ColumnDefinitions>
-            <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xE1A5;" FontSize="180" Grid.Row="0" Grid.ColumnSpan="2"/>
-            <Button FontSize="18" Grid.Row="1" Grid.ColumnSpan="2" Content="课程录像发布" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Margin="85,20,85,20"></Button>
-        </Grid>
+        <Button Grid.Row="2" Grid.Column="0" Grid.RowSpan="2" Margin="90" Style="{StaticResource LandingLargeButton}" Command="{Binding CreateNewCourseCommand}">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition />
+                    <RowDefinition />
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="256"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <!--<FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xE116;" FontSize="100" Grid.Row="0" Grid.RowSpan="2"/>-->
+                <!--<Image Source="/Assets/StartVideo.png"/>-->
+                <winui:AnimatedVisualPlayer Grid.Column="0" Grid.Row="0" Grid.RowSpan="2" Margin="50">
+                    <AnimatedVisuals:Video_camera />
+                </winui:AnimatedVisualPlayer>
+                <TextBlock Text="{Binding Path=[CreateNewCourse], Source={StaticResource Localized}}" Grid.Row="0" Grid.Column="1" FontSize="48" VerticalAlignment="Center" FontWeight="Bold" HorizontalAlignment="Left" TextWrapping="Wrap" />
+                <TextBlock Text="{Binding Path=[CreateNewFunctionDesc], Source={StaticResource Localized}}"  Grid.Row="1" Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Left"  TextWrapping="Wrap" FontSize="36" Margin="0,0,20,0">
+                    <TextBlock.Foreground>
+                        <AcrylicBrush TintColor="#CC074207" FallbackColor="#FF972C2C"/>
+                    </TextBlock.Foreground>
+                </TextBlock>
+            </Grid>
+        </Button>
+        <Button Grid.Row="2" Grid.Column="1" Grid.RowSpan="2" Grid.ColumnSpan="3" Margin="90" Style="{StaticResource LandingLargeButton}" Command="{Binding LoadCourseCommand}">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition />
+                    <RowDefinition />
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="250"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <!--<FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xEB3C;" FontSize="100" Grid.Row="0" Grid.RowSpan="2" Foreground="{StaticResource SystemAccentColorLight1}"/>-->
+                <!--<Image Source="/Assets/VideoEdit.png"/>-->
+                <winui:AnimatedVisualPlayer Grid.Column="0" Grid.Row="0" Grid.RowSpan="2">
+                    <AnimatedVisuals:Shoot_day_ />
+                </winui:AnimatedVisualPlayer>
+                <TextBlock Text="{Binding Path=[OpenExistedCouse], Source={StaticResource Localized}}" Grid.Row="0" Grid.Column="1" FontSize="48" VerticalAlignment="Center" FontWeight="Bold" HorizontalAlignment="Left" TextWrapping="Wrap" />
+                <TextBlock Text="{Binding Path=[OpenExistedFunctionDesc], Source={StaticResource Localized}}"  Grid.Row="1" Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Left"  TextWrapping="Wrap" FontSize="36" Margin="0,0,20,0">
+                    <TextBlock.Foreground>
+                        <AcrylicBrush TintColor="#CC074207" FallbackColor="#FF972C2C"/>
+                    </TextBlock.Foreground>
+                </TextBlock>
+            </Grid>
+        </Button>
     </Grid>
 </Page>

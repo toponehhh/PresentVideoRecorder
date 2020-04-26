@@ -6,7 +6,6 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:controls="using:Microsoft.Toolkit.Uwp.UI.Controls"
     mc:Ignorable="d"
-    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
     DataContext="{Binding Source={StaticResource VmLocator}, Path=EditPageVM}"
     >
 
@@ -17,46 +16,32 @@
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
             <RowDefinition Height="50"></RowDefinition>
-            <RowDefinition Height="50"></RowDefinition>
-            <RowDefinition Height="50"></RowDefinition>
             <RowDefinition Height="*"></RowDefinition>
             <RowDefinition Height="50"></RowDefinition>
             <RowDefinition Height="50"></RowDefinition>
             <RowDefinition Height="100"></RowDefinition>
         </Grid.RowDefinitions>
-        <Grid Grid.Row="0" Grid.Column="0">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="120"></ColumnDefinition>
-                <ColumnDefinition Width="*"></ColumnDefinition>
-                <ColumnDefinition Width="50"></ColumnDefinition>
-            </Grid.ColumnDefinitions>
-            <TextBlock Text="{Binding [CourseSavePath_WC],Source={StaticResource Localized}}" VerticalAlignment="Center" Grid.Column="0"/>
-            <TextBox Height="35" VerticalAlignment="Center" HorizontalAlignment="Stretch" Grid.Column="1" Margin="0,0,10,0" IsReadOnly="True" Text="{Binding CourseSavePath}"/>
-            <Button x:Name="buttonPickButton" Height="35" HorizontalAlignment="Stretch" Grid.Column="2" Content="..." Margin="0,0,20,0" Command="{Binding LoadCourseCommand}"/>
-        </Grid>
-
-        <Grid Grid.Row="0" Grid.Column="1" >
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="120"></ColumnDefinition>
-                <ColumnDefinition Width="*"></ColumnDefinition>
-            </Grid.ColumnDefinitions>
-            <TextBlock Text="{Binding [CourseSaveName_WC],Source={StaticResource Localized}}" VerticalAlignment="Center" Grid.Column="0"/>
-            <TextBox Height="35" VerticalAlignment="Center" HorizontalAlignment="Stretch" Grid.Column="1" Margin="0,0,20,0" IsReadOnly="True" Text="{Binding CourseName}"/>
-        </Grid>
-        <Grid Grid.Row="2" Grid.Column="0">
-            <TextBlock Text="摄像机视频"  HorizontalAlignment="Left" VerticalAlignment="Center" />
-            <Button x:Name="btnSetCameraVideoFull" Content="全屏播放" HorizontalAlignment="Center" VerticalAlignment="Center" Click="btnSetCameraVideoFull_Click"/>
-        </Grid>
-        <Grid Grid.Row="2" Grid.Column="1">
-            <TextBlock Text="屏幕视频" HorizontalAlignment="Left" VerticalAlignment="Center"/>
-            <Button x:Name="btnSetScreenVideoFull" Content="全屏播放" HorizontalAlignment="Center" VerticalAlignment="Center" Click="btnSetScreenVideoFull_Click"/>
-        </Grid>
-
-        <MediaPlayerElement x:Name="cameraVideoPlayer" Grid.Row="3" Grid.Column="0" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Stretch="Fill" Margin="5,0"
+        <Border BorderThickness="2" BorderBrush="{StaticResource SystemChromeGrayColor}">
+            <Grid>
+                <TextBlock Text="摄像机视频"  HorizontalAlignment="Left" VerticalAlignment="Center" />
+                <Button x:Name="btnSetCameraVideoFull" Content="全屏播放" HorizontalAlignment="Center" VerticalAlignment="Center" Click="btnSetCameraVideoFull_Click"/>
+            </Grid>
+        </Border>
+        <Border Grid.Row="0" Grid.Column="1" BorderThickness="2" BorderBrush="{StaticResource SystemChromeGrayColor}">
+            <Grid>
+                <TextBlock Text="屏幕视频" HorizontalAlignment="Left" VerticalAlignment="Center"/>
+                <Button x:Name="btnSetScreenVideoFull" Content="全屏播放" HorizontalAlignment="Center" VerticalAlignment="Center" Click="btnSetScreenVideoFull_Click"/>
+            </Grid>
+        </Border>
+        <Border Grid.Row="1" Grid.Column="0" BorderThickness="2" BorderBrush="{StaticResource SystemChromeGrayColor}">
+            <MediaPlayerElement x:Name="cameraVideoPlayer" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Stretch="Uniform" Margin="10"
                       AreTransportControlsEnabled="False" />
-        <MediaPlayerElement x:Name="screenVideoPlayer" Grid.Row="3" Grid.Column="1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Stretch="Fill" Margin="5,0"
+        </Border>
+        <Border Grid.Row="1" Grid.Column="1" BorderThickness="2" BorderBrush="{StaticResource SystemChromeGrayColor}">
+            <MediaPlayerElement x:Name="screenVideoPlayer" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Stretch="Uniform" Margin="10"
                       AreTransportControlsEnabled="False" />
-        
+        </Border>
+
         <!--<Grid Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="2">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="120"></ColumnDefinition>
@@ -71,7 +56,7 @@
                                     />
         </Grid>-->
 
-        <Grid Grid.Row="5" Grid.Column="0" Grid.ColumnSpan="2">
+        <Grid Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="2">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="120"></ColumnDefinition>
                 <ColumnDefinition Width="*"></ColumnDefinition>
@@ -80,7 +65,7 @@
             <Slider Grid.Column="1" HorizontalAlignment="Stretch" VerticalAlignment="Center" Margin="0,0,20,0" Maximum="{Binding CourseTotalSeconds}" Value="{Binding CurrentPlayProgress,Mode=TwoWay}" TickFrequency="1" SnapsTo="Ticks" TickPlacement="Outside" SmallChange="1" LargeChange="5"></Slider>
         </Grid>
 
-        <Grid Grid.Row="6" Grid.Column="0" Grid.ColumnSpan="2">
+        <Grid Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="2">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*"></ColumnDefinition>
                 <ColumnDefinition Width="*"></ColumnDefinition>
@@ -175,5 +160,15 @@
                 </Button.Content>
             </Button>
         </Grid>
+
+        <controls:Loading x:Name="LoadingControl" IsLoading="False" Grid.ColumnSpan="2" Grid.RowSpan="5">
+            <controls:Loading.Background>
+                <SolidColorBrush Color="White" Opacity="0.9" />
+            </controls:Loading.Background>
+            <StackPanel Orientation="Horizontal">
+                <ProgressRing IsActive="True" Foreground="Blue"  Width="50" Height="50"/>
+                <TextBlock Margin="25" Text="请耐心等待系统课程加载 :)" Foreground="Black" VerticalAlignment="Center"  FontSize="24"/>
+            </StackPanel>
+        </controls:Loading>
     </Grid>
 </Page>

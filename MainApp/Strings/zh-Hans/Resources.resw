@@ -117,14 +117,35 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="ActionChooseForContinue_WC" xml:space="preserve">
+    <value>请选择要载入后的选项：</value>
+  </data>
   <data name="AppDescription" xml:space="preserve">
-    <value>中山医院在线视频录制系统可以帮助你快速录制、编辑、转码和发布你的课程。</value>
+    <value>本系统可以帮助您快速录制、编辑、转码和发布您的在线课程供大家学习。</value>
   </data>
   <data name="AppDisplayName" xml:space="preserve">
     <value>中山医院在线学习课程录制系统</value>
   </data>
+  <data name="AudioCombineNoneVideo" xml:space="preserve">
+    <value>将音频独立保存</value>
+  </data>
+  <data name="AudioCombineWithCameraVideo" xml:space="preserve">
+    <value>将音频与摄像机视频合并</value>
+  </data>
+  <data name="AudioCombineWithScreenVideo" xml:space="preserve">
+    <value>将音频与屏幕视频合并</value>
+  </data>
+  <data name="CancelAndClose" xml:space="preserve">
+    <value>放弃并关闭</value>
+  </data>
+  <data name="ChooseFunction_WC" xml:space="preserve">
+    <value>请点击您所需要的功能按钮：</value>
+  </data>
   <data name="ChooseScreenVideoSource" xml:space="preserve">
     <value>选择屏幕录像来源</value>
+  </data>
+  <data name="CourseIsRecordingNeedExit" xml:space="preserve">
+    <value>您当前有课程正在录制过程中，你确定要离开并停止录制吗？</value>
   </data>
   <data name="CourseNeedAudio_WC" xml:space="preserve">
     <value>选择录音设备：</value>
@@ -135,17 +156,44 @@
   <data name="CourseNeedScreenVideo_WC" xml:space="preserve">
     <value>录制屏幕视频：</value>
   </data>
+  <data name="CourseRecordStopped" xml:space="preserve">
+    <value>课程录制已经停止！</value>
+  </data>
   <data name="CourseSaveName_WC" xml:space="preserve">
     <value>课程名称：</value>
   </data>
   <data name="CourseSavePath_WC" xml:space="preserve">
     <value>课程存放路径：</value>
   </data>
+  <data name="CreateNewCourse" xml:space="preserve">
+    <value>录制一个全新的课程</value>
+  </data>
+  <data name="CreateNewCourseDialogTitle" xml:space="preserve">
+    <value>请输入新课程的基本信息并点击创建按钮</value>
+  </data>
+  <data name="CreateNewCourseText" xml:space="preserve">
+    <value>创建新课程</value>
+  </data>
+  <data name="CreateNewFunctionDesc" xml:space="preserve">
+    <value>选择我会帮助您从新开始录制一个新的在线课程</value>
+  </data>
+  <data name="CurrentCourseName_WC" xml:space="preserve">
+    <value>当前课程：</value>
+  </data>
   <data name="DataFileSaveFailed" xml:space="preserve">
     <value>数据文件保存失败</value>
   </data>
+  <data name="EditCourseActionText" xml:space="preserve">
+    <value>我要编辑课程视频</value>
+  </data>
   <data name="Error" xml:space="preserve">
     <value>错误</value>
+  </data>
+  <data name="Info" xml:space="preserve">
+    <value>提示信息</value>
+  </data>
+  <data name="LoadAndContinueWorkText" xml:space="preserve">
+    <value>载入并继续处理该课程</value>
   </data>
   <data name="MediaCaptureRecordLimitationExceeded" xml:space="preserve">
     <value>录制设备的工作时间已到达系统规定的最大时间限制，录制已被终止。</value>
@@ -153,8 +201,23 @@
   <data name="No" xml:space="preserve">
     <value>否</value>
   </data>
+  <data name="OpenExistedCourseDialogTitle" xml:space="preserve">
+    <value>请选择课程所在目录并选择加载后的选项</value>
+  </data>
+  <data name="OpenExistedCouse" xml:space="preserve">
+    <value>打开一个录制好的课程</value>
+  </data>
+  <data name="OpenExistedFunctionDesc" xml:space="preserve">
+    <value>选择我会帮助您打开一个已经录制好的在线课程并进行后续工作</value>
+  </data>
   <data name="Pause" xml:space="preserve">
     <value>暂停</value>
+  </data>
+  <data name="RecordCourseActionText" xml:space="preserve">
+    <value>我要继续录制课程视频</value>
+  </data>
+  <data name="RecordingTimeText_WC" xml:space="preserve">
+    <value>录制时长：</value>
   </data>
   <data name="RenewRecord" xml:space="preserve">
     <value>录新课程</value>
@@ -174,8 +237,17 @@
   <data name="StopRecord" xml:space="preserve">
     <value>停止录像</value>
   </data>
+  <data name="TanscodeCourseActionText" xml:space="preserve">
+    <value>我要将课程内容转码</value>
+  </data>
+  <data name="UploadCourseActionText" xml:space="preserve">
+    <value>我要上传课程内容</value>
+  </data>
   <data name="Warning" xml:space="preserve">
     <value>警告</value>
+  </data>
+  <data name="WelcomeWord" xml:space="preserve">
+    <value>欢迎您使用中山医院在线学习课程录制系统</value>
   </data>
   <data name="Yes" xml:space="preserve">
     <value>是</value>
