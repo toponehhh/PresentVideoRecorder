@@ -27,14 +27,13 @@ namespace PresentVideoRecorder.ContentPages
             }
         }
 
-        protected override async void OnNavigatingFrom(NavigatingCancelEventArgs e)
+        protected async override void OnNavigatedFrom(NavigationEventArgs e)
         {
+            base.OnNavigatedFrom(e);
             var viewModel = DataContext as RecordPageViewModel;
             if (viewModel != null)
             {
-                viewModel.SetAppBusyFlag(true);
                 await viewModel.Reset();
-                viewModel.SetAppBusyFlag(false);
             }
         }
     }

@@ -147,6 +147,9 @@
   <data name="CourseIsRecordingNeedExit" xml:space="preserve">
     <value>您当前有课程正在录制过程中，你确定要离开并停止录制吗？</value>
   </data>
+  <data name="CourseIsTanscodingNeedExit" xml:space="preserve">
+    <value>课程转码工作正在进行中，你确定要终止转码并离开吗？</value>
+  </data>
   <data name="CourseNeedAudio_WC" xml:space="preserve">
     <value>选择录音设备：</value>
   </data>

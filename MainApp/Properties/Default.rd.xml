@@ -33,7 +33,6 @@
     <Type Name="System.Text.Json.Serialization.Converters.JsonConverterEnum" Dynamic="Required All" />
     <Type Name="System.Text.Json.Serialization.Converters.JsonConverterDateTime" Dynamic="Required All" />
     <Type Name="System.Text.Json.Serialization.Converters.JsonConverterDateTimeOffset" Dynamic="Required All" />
-    
     <!-- Add your application specific runtime directives here. -->
 
 

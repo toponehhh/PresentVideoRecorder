@@ -11,6 +11,7 @@ using Windows.Media.Editing;
 using Windows.Media.MediaProperties;
 using Windows.Media.Transcoding;
 using Windows.Storage;
+using Windows.UI.Xaml.Controls;
 
 namespace PresentVideoRecorder.ViewModels.ContentPageViewModels
 {
@@ -227,14 +228,6 @@ namespace PresentVideoRecorder.ViewModels.ContentPageViewModels
 
         public Dictionary<string, CombineAudioWay> CombinAudioWaySource { get; private set; }
 
-
-
-        private void loadDefaultTancodeProfiles()
-        {
-            //var highQuantityProfile = new MediaTranscodeProfile();
-
-        }
-
         public void LoadCourseData()
         {
             if (pageParent.CurrentWorkingCourse != null)
@@ -270,12 +263,19 @@ namespace PresentVideoRecorder.ViewModels.ContentPageViewModels
                 IsTanscodeing = false;
             }
             CheckCommandExecutable();
+            pageParent.UnlockNavigation();
+        }
+
+        private async Task<bool> showExitConfirmMessage()
+        {
+            return await _dialogService.ShowConfirmMessage(LocalizedStrings.GetResourceString("Warning"), LocalizedStrings.GetResourceString("CourseIsTanscodingNeedExit"));
         }
 
         private async Task StartTanscode()
         {
             IsTanscodeing = true;
             CheckCommandExecutable();
+            pageParent.LockNavigation(showExitConfirmMessage);
             try
             {
                 switch (SelectedCombinAudioWay)
@@ -322,7 +322,6 @@ namespace PresentVideoRecorder.ViewModels.ContentPageViewModels
 
                 var tansCodeSaveFolder = await StorageFolder.GetFolderFromPathAsync(TanscodeFileSaveDirectory);
 
-
                 if (_cameraVideoComposition != null)
                 {
                     _cameraVideoFinalFile = await tansCodeSaveFolder.CreateFileAsync(MediaProcessHelper.CAMERA_VIDEO_FINAL_FILE_NAME, CreationCollisionOption.ReplaceExisting);
@@ -338,12 +337,24 @@ namespace PresentVideoRecorder.ViewModels.ContentPageViewModels
                     //await _screenVideoFinalConvertOperation;
                 }
                 await Task.WhenAll(_cameraVideoFinalConvertOperation?.AsTask(), _screenVideoFinalConvertOperation?.AsTask());
+                if (_cameraVideoFinalFile != null && StorageFileHelper.IsFilePathValid(_cameraVideoFinalFile.Path))
+                {
+                    pageParent.CurrentWorkingCourse.CameraFinalVideoFile = _cameraVideoFinalFile.Path;
+                }
+                if (_screenVideoFinalFile != null && StorageFileHelper.IsFilePathValid(_screenVideoFinalFile.Path))
+                {
+                    pageParent.CurrentWorkingCourse.ScreenFinalVideoFile = _screenVideoFinalFile.Path;
+                }
+                pageParent.CurrentWorkingCourse?.SaveToStorageFileAsync();
+                pageParent.CurrentWorkingCourse?.CameraTansCodeVideoFiles?.Clear();
+                pageParent.CurrentWorkingCourse?.ScreenTansCodeVideoFiles?.Clear();
 
                 if (NeedTanscodeHighQuantity)
                 {
                     if (_cameraVideoComposition != null)
                     {
                         var cameraVideoHighFile = await tansCodeSaveFolder.CreateFileAsync(string.Format(MediaProcessHelper.CAMERA_VIDEO_TRANS_FILE_NAME_FORMAT, "High"), CreationCollisionOption.ReplaceExisting);
+                        pageParent.CurrentWorkingCourse.CameraTansCodeVideoFiles.Add(cameraVideoHighFile.Path);
                         _cameraVideoHighConvertOperation = _cameraVideoComposition.RenderToFileAsync(cameraVideoHighFile, MediaTrimmingPreference.Fast);
                         _cameraVideoHighConvertOperation.Progress = new AsyncOperationProgressHandler<TranscodeFailureReason, double>(async (info, progress) => { await DispatcherHelper.ExecuteOnUIThreadAsync(() => CameraHighVideoConvertProgress = progress / 2 + 50); });
                         //await _cameraVideoHighConvertOperation;
@@ -351,6 +362,7 @@ namespace PresentVideoRecorder.ViewModels.ContentPageViewModels
                     if (_screenVideoComposition != null)
                     {
                         var screenVideoHighFile = await tansCodeSaveFolder.CreateFileAsync(string.Format(MediaProcessHelper.SCREEN_VIDEO_TRANS_FILE_NAME_FORMAT, "High"), CreationCollisionOption.ReplaceExisting);
+                        pageParent.CurrentWorkingCourse.ScreenTansCodeVideoFiles.Add(screenVideoHighFile.Path);
                         _screenVideoHighConvertOperation = _screenVideoComposition.RenderToFileAsync(screenVideoHighFile, MediaTrimmingPreference.Fast);
                         _screenVideoHighConvertOperation.Progress = new AsyncOperationProgressHandler<TranscodeFailureReason, double>(async (info, progress) => { await DispatcherHelper.ExecuteOnUIThreadAsync(() => ScreenHighVideoConvertProgress = progress / 2 + 50); });
                         //await _screenVideoHighConvertOperation;
@@ -367,6 +379,7 @@ namespace PresentVideoRecorder.ViewModels.ContentPageViewModels
                         cameraVideoTanscodeMediumProfile.Video.Height = cameraVideoTanscodeMediumProfile.Video.Height / 3 * 2;
                         cameraVideoTanscodeMediumProfile.Video.Bitrate = cameraVideoTanscodeMediumProfile.Video.Bitrate / 3 * 2;
                         var cameraVideoMediumFile = await tansCodeSaveFolder.CreateFileAsync(string.Format(MediaProcessHelper.CAMERA_VIDEO_TRANS_FILE_NAME_FORMAT, "Medium"), CreationCollisionOption.ReplaceExisting);
+                        pageParent.CurrentWorkingCourse.CameraTansCodeVideoFiles.Add(cameraVideoMediumFile.Path);
                         _cameraVideoMediumConvertOperation = _cameraVideoComposition.RenderToFileAsync(cameraVideoMediumFile, MediaTrimmingPreference.Fast, cameraVideoTanscodeMediumProfile);
                         _cameraVideoMediumConvertOperation.Progress = new AsyncOperationProgressHandler<TranscodeFailureReason, double>(async (info, progress) => { await DispatcherHelper.ExecuteOnUIThreadAsync(() => CameraMediumVideoConvertProgress = progress); });
                         //await _cameraVideoMediumConvertOperation;
@@ -378,6 +391,7 @@ namespace PresentVideoRecorder.ViewModels.ContentPageViewModels
                         screenVideoTanscodeMediumProfile.Video.Height = screenVideoTanscodeMediumProfile.Video.Height / 3 * 2;
                         screenVideoTanscodeMediumProfile.Video.Bitrate = screenVideoTanscodeMediumProfile.Video.Bitrate / 3 * 2;
                         var screenVideoMediumFile = await tansCodeSaveFolder.CreateFileAsync(string.Format(MediaProcessHelper.SCREEN_VIDEO_TRANS_FILE_NAME_FORMAT, "Medium"), CreationCollisionOption.ReplaceExisting);
+                        pageParent.CurrentWorkingCourse.ScreenTansCodeVideoFiles.Add(screenVideoMediumFile.Path);
                         _screenVideoMediumConvertOperation = _screenVideoComposition.RenderToFileAsync(screenVideoMediumFile, MediaTrimmingPreference.Fast, screenVideoTanscodeMediumProfile);
                         _screenVideoMediumConvertOperation.Progress = new AsyncOperationProgressHandler<TranscodeFailureReason, double>(async (info, progress) => { await DispatcherHelper.ExecuteOnUIThreadAsync(() => ScreenMediumVideoConvertProgress = progress); });
                         //await _screenVideoMediumConvertOperation;
@@ -393,6 +407,7 @@ namespace PresentVideoRecorder.ViewModels.ContentPageViewModels
                         cameraVideoTanscodeLowProfile.Video.Height = cameraVideoTanscodeLowProfile.Video.Height / 3;
                         cameraVideoTanscodeLowProfile.Video.Bitrate = cameraVideoTanscodeLowProfile.Video.Bitrate / 3;
                         var cameraVideoLowFile = await tansCodeSaveFolder.CreateFileAsync(string.Format(MediaProcessHelper.CAMERA_VIDEO_TRANS_FILE_NAME_FORMAT, "Low"), CreationCollisionOption.ReplaceExisting);
+                        pageParent.CurrentWorkingCourse.CameraTansCodeVideoFiles.Add(cameraVideoLowFile.Path);
                         _cameraVideoLowConvertOperation = _cameraVideoComposition.RenderToFileAsync(cameraVideoLowFile, MediaTrimmingPreference.Fast, cameraVideoTanscodeLowProfile);
                         _cameraVideoLowConvertOperation.Progress = new AsyncOperationProgressHandler<TranscodeFailureReason, double>(async (info, progress) => { await DispatcherHelper.ExecuteOnUIThreadAsync(() => CameraLowVideoConvertProgress = progress); });
                         //await _cameraVideoLowConvertOperation;
@@ -404,6 +419,7 @@ namespace PresentVideoRecorder.ViewModels.ContentPageViewModels
                         screenVideoTanscodeLowProfile.Video.Height = screenVideoTanscodeLowProfile.Video.Height / 3;
                         screenVideoTanscodeLowProfile.Video.Bitrate = screenVideoTanscodeLowProfile.Video.Bitrate / 3;
                         var screenVideoLowFile = await tansCodeSaveFolder.CreateFileAsync(string.Format(MediaProcessHelper.SCREEN_VIDEO_TRANS_FILE_NAME_FORMAT, "Low"), CreationCollisionOption.ReplaceExisting);
+                        pageParent.CurrentWorkingCourse.ScreenTansCodeVideoFiles.Add(screenVideoLowFile.Path);
                         _screenVideoLowConvertOperation = _screenVideoComposition.RenderToFileAsync(screenVideoLowFile, MediaTrimmingPreference.Fast, screenVideoTanscodeLowProfile);
                         _screenVideoLowConvertOperation.Progress = new AsyncOperationProgressHandler<TranscodeFailureReason, double>(async (info, progress) => { await DispatcherHelper.ExecuteOnUIThreadAsync(() => ScreenLowVideoConvertProgress = progress); });
                         //await _screenVideoLowConvertOperation;
@@ -412,6 +428,8 @@ namespace PresentVideoRecorder.ViewModels.ContentPageViewModels
 
                 await Task.WhenAll(_cameraVideoHighConvertOperation?.AsTask(), _cameraVideoMediumConvertOperation?.AsTask(), _cameraVideoLowConvertOperation?.AsTask());
                 await Task.WhenAll(_screenVideoHighConvertOperation?.AsTask(), _screenVideoMediumConvertOperation?.AsTask(), _screenVideoLowConvertOperation?.AsTask());
+                await pageParent.CurrentWorkingCourse.SaveToStorageFileAsync();
+
                 _dialogService.ShowInformationMessage("转码结果", "转码工作已完成");
             }
             catch (TaskCanceledException)
@@ -427,7 +445,7 @@ namespace PresentVideoRecorder.ViewModels.ContentPageViewModels
 
             IsTanscodeing = false;
             CheckCommandExecutable();
-            
+            pageParent.UnlockNavigation();
         }
 
         private void CheckCommandExecutable()

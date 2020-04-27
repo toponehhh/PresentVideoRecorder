@@ -1,18 +1,12 @@
 ﻿using GalaSoft.MvvmLight.Command;
 using Microsoft.Toolkit.Uwp.Helpers;
 using PresentVideoRecorder.Helpers;
-using PresentVideoRecorder.Models;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using Windows.Media;
-using Windows.Media.Core;
 using Windows.Media.Editing;
 using Windows.Media.Playback;
-using Windows.Storage;
-using Windows.Storage.Pickers;
 using Windows.UI.Xaml.Controls;
 
 namespace PresentVideoRecorder.ViewModels.ContentPageViewModels
@@ -219,14 +213,12 @@ namespace PresentVideoRecorder.ViewModels.ContentPageViewModels
                     _mediaPlayerController.Pause();
                 }
 
+                _cameraPlayerElement.Source = null;
+                _screenPlayerElement.Source = null;
+
                 CourseTotalSeconds = 0;
                 CurrentPlayProgress = 0;
-
-                _moveForwardMediaCommand.RaiseCanExecuteChanged();
-                _moveBackwardMediaCommand.RaiseCanExecuteChanged();
-                _pauseOrResumeMediaCommand.RaiseCanExecuteChanged();
-            }
-        );
+            });
         }
     }
 }

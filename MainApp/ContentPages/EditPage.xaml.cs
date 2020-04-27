@@ -41,13 +41,19 @@ namespace PresentVideoRecorder.ContentPages
                 viewModel.InitMediaPlayers(cameraVideoPlayer, screenVideoPlayer);
                 while (viewModel.IsAppInBusyStatus) await Task.Delay(1000);
                 await viewModel.LoadCourseData();
+                await Task.Delay(3000);
                 LoadingControl.IsLoading = false;
             }
         }
 
-        protected override void OnNavigatingFrom(NavigatingCancelEventArgs e)
+        protected async override void OnNavigatedFrom(NavigationEventArgs e)
         {
-            base.OnNavigatingFrom(e);
+            base.OnNavigatedFrom(e);
+            var viewModel = DataContext as EditPageViewModel;
+            if (viewModel != null)
+            {
+                await viewModel.Reset();
+            }
         }
 
         private void TrimAllButCurrentRange(MediaComposition composition, RangeSelector rangeSelector)

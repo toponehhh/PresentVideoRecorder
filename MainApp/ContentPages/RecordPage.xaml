@@ -30,11 +30,11 @@
             </Grid.ColumnDefinitions>
             <TextBlock VerticalAlignment="Center" Grid.Column="0" Text="{Binding Path=[CourseNeedAudio_WC], Source={StaticResource Localized}}" />
             <ComboBox x:Name="cbAudioCaptureDevices" Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Stretch" Margin="5" ItemsSource="{Binding AudioCaptureDevices}" DisplayMemberPath="Name" SelectedValuePath="Id" IsEnabled="{Binding IsRecording, Converter={StaticResource BoolNegationConverter}}">
-                <i:Interaction.Behaviors>
+                <!--<i:Interaction.Behaviors>
                     <core:EventTriggerBehavior EventName="SelectionChanged">
-                        <core:InvokeCommandAction Command="{Binding AudioCaptureDeviceSelectedCommand}" CommandParameter="{x:Bind cbAudioCaptureDevices.SelectedItem,Mode=TwoWay}"></core:InvokeCommandAction>
+                        <core:InvokeCommandAction Command="{Binding AudioCaptureDeviceSelectedCommand}" CommandParameter="{x:Bind cbAudioCaptureDevices.SelectedItem,Mode=TwoWay}"/>
                     </core:EventTriggerBehavior>
-                </i:Interaction.Behaviors>
+                </i:Interaction.Behaviors>-->
             </ComboBox>
         </Grid>
         
@@ -54,11 +54,11 @@
             </Grid.ColumnDefinitions>
             <CheckBox x:Name="chbNeedCameraVideo" Content="{Binding Path=[CourseNeedCameraVideo_WC],Source={StaticResource Localized}}" VerticalAlignment="Center" IsChecked="{Binding NeedRecordCameraVideo, Mode=TwoWay}" Command="{Binding CheckVideoCaptureDevicesCommand}"/>
             <ComboBox x:Name="cbVideoCaptureDevices" Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Stretch" Margin="5" IsEnabled="{Binding NeedRecordCameraVideo}" ItemsSource="{Binding VideoCaptureDevices}" DisplayMemberPath="Name" SelectedValuePath="Id">
-                <i:Interaction.Behaviors>
+                <!--<i:Interaction.Behaviors>
                     <core:EventTriggerBehavior EventName="SelectionChanged">
-                        <core:InvokeCommandAction Command="{Binding VideoCaptureDeviceSelectedCommand}" CommandParameter="{x:Bind cbVideoCaptureDevices.SelectedItem,Mode=TwoWay}"></core:InvokeCommandAction>
+                        <core:InvokeCommandAction Command="{Binding VideoCaptureDeviceSelectedCommand}" CommandParameter="{x:Bind cbVideoCaptureDevices.SelectedItem,Mode=TwoWay}"/>
                     </core:EventTriggerBehavior>
-                </i:Interaction.Behaviors>
+                </i:Interaction.Behaviors>-->
             </ComboBox>
         </Grid>
 

@@ -81,7 +81,7 @@ namespace PresentVideoRecorder.ViewModels.ContentDialogViewModels
             }
         }
 
-        private async void LoadCourseData()
+        private void LoadCourseData()
         {
             //if (!string.IsNullOrEmpty(CourseDataPath))
             //{

@@ -113,11 +113,18 @@ namespace PresentVideoRecorder.ViewModels
 
         public async void CreateNewCourse()
         {
-            var createNewCourseVM = await _dialogService.ShowCreateNewCourseDialog();
-            if (createNewCourseVM != null)
+            if (_stopNavigateCallback != null)
             {
-                CurrentWorkingCourse = createNewCourseVM.SelectedCourse;
-                ContentFrame.Navigate(typeof(RecordPage));
+                _allowNavigate = await _stopNavigateCallback.Invoke();
+            }
+            if (_allowNavigate)
+            {
+                var createNewCourseVM = await _dialogService.ShowCreateNewCourseDialog();
+                if (createNewCourseVM != null)
+                {
+                    CurrentWorkingCourse = createNewCourseVM.SelectedCourse;
+                    ContentFrame.Navigate(typeof(RecordPage));
+                }
             }
         }
 

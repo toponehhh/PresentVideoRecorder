@@ -22,12 +22,20 @@ namespace PresentVideoRecorder.Models
         public List<string> AudioFiles { get; set; }
         public List<string> CameraVideoFiles { get; set; }
         public List<string> ScreenVideoFiles { get; set; }
+        public string CameraFinalVideoFile { get; set; }
+        public string ScreenFinalVideoFile { get; set; }
+        public List<string> CameraTansCodeVideoFiles { get; set; }
+        public List<string> ScreenTansCodeVideoFiles { get; set; }
+
 
         public Course()
         {
             AudioFiles = new List<string>();
             CameraVideoFiles = new List<string>();
             ScreenVideoFiles = new List<string>();
+
+            CameraTansCodeVideoFiles = new List<string>();
+            ScreenTansCodeVideoFiles = new List<string>();
         }
 
         public static Course CreateNewCourse(string courseName)
